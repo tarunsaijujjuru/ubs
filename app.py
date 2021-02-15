@@ -14,9 +14,6 @@ from wtforms.validators import DataRequired
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
-# Configurations
-app.config['SECRET_KEY'] = 'blah blah blah blah'
-
 client = pymongo.MongoClient("mongodb+srv://ubs:" + urllib.parse.quote('ubs@12345') + "@cluster0.qxrt7.mongodb.net/ubs?retryWrites=true&w=majority")
 db = client.University_Bazar_db
 
