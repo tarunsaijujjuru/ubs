@@ -16,15 +16,6 @@ from wtforms.validators import DataRequired
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
-# Configurations
-app.config['SECRET_KEY'] = 'blah blah blah blah'
-
-# usr = os.environ['MONGO_DB_USER']
-# pwd = os.environ['MONGO_DB_PASS']
-# client = pymongo.MongoClient("mongodb+srv://" + usr + ":" + pwd + "@firstcluster-obuqd.mongodb.net/test?retryWrites=true&w=majority")
-# db = client['SampleDatabase']
-# collection = db['SampleCollection']
-
 client = pymongo.MongoClient("mongodb+srv://ubs:" + urllib.parse.quote('ubs@12345') + "@cluster0.qxrt7.mongodb.net/ubs?retryWrites=true&w=majority")
 db = client.University_Bazar_db
 
@@ -40,8 +31,6 @@ class registerForm(FlaskForm):
 def index():
 	form = registerForm()
 	if form.validate_on_submit():
-		
-		= db.userData_db.find_one({'Email ID': form.emailID.data})
 		userDataRegistraion = {'FirstName': form.firstName.data, 'LastName': form.lastName.data, 'EmailID': form.emailID.data ,'Password': form.password.data }
 		db.userData_db.insert_one(userDataRegistraion).inserted_id
 		return render_template('register.html',form=form, user=True)
