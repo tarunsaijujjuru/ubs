@@ -11,5 +11,7 @@ flask-nav
 werkzeug==0.16.1
 ibm_db
 sqlalchemy
-ibm_db_sa
 pandas
+pymongo
+dnspython
+urllib
