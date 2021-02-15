@@ -5,5 +5,5 @@ flask-bootstrap
 flask-nav
 pymongo
 dnspython
-urllib
 email_validator
+
