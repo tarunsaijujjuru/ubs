@@ -14,6 +14,8 @@ from wtforms.validators import DataRequired
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
+app.config['SECRET_KEY'] = 'blah blah blah blah'
+
 client = pymongo.MongoClient("mongodb+srv://ubs:" + urllib.parse.quote('ubs@12345') + "@cluster0.qxrt7.mongodb.net/ubs?retryWrites=true&w=majority")
 db = client.University_Bazar_db
 
@@ -46,4 +48,4 @@ def requests_error(error):
 
 
 port = int(os.getenv('PORT', '3000'))
-app.run(host='127.0.1.0', port=port)
+app.run(host='127.0.0.1', port=port)
