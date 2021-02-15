@@ -1,0 +1,15 @@
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block content %}
+
+    {% if user%}
+
+    <h1>Registration Succesful Please Login</h1>
+
+    {% endif %}
+
+{{ wtf.quick_form(form) }}
+
+{% endblock %}

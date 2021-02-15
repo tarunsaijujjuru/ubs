@@ -3,3 +3,6 @@ Flask-WTF
 flask-uploads
 flask-bootstrap
 flask-nav
+pymongo
+dnspython
+urllib
