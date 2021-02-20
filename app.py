@@ -4,7 +4,7 @@ import os
 import pymongo
 import json
 import urllib
-from flask import Flask,render_template, url_for, flash, redirect, request
+from flask import Flask,render_template, url_for, flash, redirect, request, session
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators
@@ -71,7 +71,10 @@ def login():
 				if(storedPassword!=password):
 					msg = "password do not match"
 				else:
-					msg = "logged in successfully"
+					session['EmailID'] = userData['EmailID']
+					session['FirstName'] = userData['FirstName']
+					session['LastName'] = userData['LastName']
+					return render_template('homepage.html', form=form)
 			except:
 				msg = "some error occured"
 		return render_template('login.html',form=form,msg=msg)
