@@ -1,0 +1,40 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block app_content %}
+
+    <h3>Create your account</h3>
+    <hr>
+    {% if msg%}
+        <div class="alert alert-primary" role="alert">
+            <h4 > {{msg}} </h4>
+        </div>
+    {% endif %}
+    <form action="/register" method="post" class="form" role="form">
+        {{form.csrf_token}}
+        <div class="row">
+            <div class="form-group col-md-6">
+                {{ wtf.form_field(form.firstName, class='form-control',
+                    placeholder='First name') }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ wtf.form_field(form.lastName, class='form-control',
+                    placeholder='Last name') }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {{ wtf.form_field(form.emailID, type='email', class='form-control', placeholder='Email Address') }}
+        </div>
+
+        <div class="form-group">
+            {{ wtf.form_field(form.password, type='password', class='form-control', placeholder='Password') }}
+        </div>
+
+        <div class="form-group">
+            {{ wtf.form_field(form.submit, class='btn btn-primary') }}
+        </div>
+    </form>
+
+
+{% endblock %}

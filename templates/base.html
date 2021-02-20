@@ -1,3 +1,4 @@
+
 {% extends 'bootstrap/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
 
@@ -8,23 +9,25 @@
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-
 {% endblock %}
 
 {% block title %}
   {% if title %}{{ title }} - {{ appname }}{% else %}{{ appname }}{% endif %}
 {% endblock %}
 
-{% block content %}
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+      <a style="font-size:20px;" href="#"><span class="glyphicon glyphicon"></span>University Bazar</a>
+      <a style="font-size:20px;" href="{{ url_for('register') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+      <a style="font-size:20px;" href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+  </div>
+</nav>
+{% endblock %}
 
-    <!-- <div id="title_bar" class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h2 id="main_title">{{ appname }}</h1>
-        <h3 id="student_id">1234567890</h2>
-        <h4 id="student_name">Lastname, Firstname</h3>
-      </div>
-    </div> -->
-    {% block app_content %}
-    {% endblock %}
+{% block content %}
+    <div class="container">
+        {% block app_content %}
+        {% endblock %}
+    </div>
 {% endblock %}

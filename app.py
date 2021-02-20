@@ -1,61 +1,81 @@
-import os
 import shutil
-import csv
 import sys
+import os
+import pymongo
+import json
+import urllib
 from flask import Flask,render_template, url_for, flash, redirect, request
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
 from flask_bootstrap import Bootstrap
-from wtforms import StringField, IntegerField, SubmitField, SelectField, validators
-from wtforms.validators import DataRequired
+from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators
+import email_validator
+from wtforms.validators import InputRequired, Email, DataRequired
+from wtforms.fields.html5 import EmailField
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
-# Configurations
 app.config['SECRET_KEY'] = 'blah blah blah blah'
+client = pymongo.MongoClient("mongodb+srv://ubs:" + urllib.parse.quote('ubs@12345') + "@cluster0.qxrt7.mongodb.net/ubs?retryWrites=true&w=majority")
+db = client.University_Bazar_db
 
-class NameForm(FlaskForm):
-	name = StringField('Name', default="Bruce Springsteen")
+
+class registerForm(FlaskForm):
+	firstName = StringField('First Name', [validators.DataRequired()])
+	lastName = StringField('Last Name', [validators.DataRequired()])
+	emailID = EmailField('Email ID', [validators.DataRequired(),validators.Email()])
+	password = PasswordField('Password', [validators.DataRequired()])
+	submit = SubmitField('submit')
+
+class LoginForm(FlaskForm):
+	emailID = StringField('email ID')
+	password = PasswordField('Password')
 	submit = SubmitField('Submit')
 
 class searchbar(FlaskForm):
 	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
-	# submit = SubmitField('Search')
+
+@app.route('/register',methods=['GET','POST'])
+def register():
+	form = registerForm()
+	if form.validate_on_submit():
+		userData = db.userData_db.find_one({'EmailID': form.emailID.data})
+		if userData is None:
+			userDataRegistraion = {'FirstName': form.firstName.data, 'LastName': form.lastName.data, 'EmailID': form.emailID.data ,'Password': form.password.data }
+			db.userData_db.insert_one(userDataRegistraion).inserted_id
+			msg = "Registration Succesful Please Login"
+			return render_template('register.html',form=form, msg=msg)
+		else:
+			msg ="User already exists please login"
+			return render_template('register.html',form=form, msg=msg)
+	return render_template('register.html',form=form)
+
+@app.route('/',methods=['GET','POST'])
+def base():
+	return redirect('/login')
 
 # ROUTES!
-@app.route('/',methods=['GET','POST'])
-def index():
-	form = NameForm()
+@app.route('/login',methods=['GET','POST'])
+def login():
+	form = LoginForm()
+	msg = ""
 	if form.validate_on_submit():
-		name = form.name.data
-		return render_template('index.html',form=form,name=name)
-	return render_template('index.html',form=form,name=None)
-
-@app.route('/help')
-def help():
-	text_list = []
-	# Python Version
-	text_list.append({
-		'label':'Python Version',
-		'value':str(sys.version)})
-	# os.path.abspath(os.path.dirname(__file__))
-	text_list.append({
-		'label':'os.path.abspath(os.path.dirname(__file__))',
-		'value':str(os.path.abspath(os.path.dirname(__file__)))
-		})
-	# OS Current Working Directory
-	text_list.append({
-		'label':'OS CWD',
-		'value':str(os.getcwd())})
-	# OS CWD Contents
-	label = 'OS CWD Contents'
-	value = ''
-	text_list.append({
-		'label':label,
-		'value':value})
-	return render_template('help.html',text_list=text_list,title='help')
-
+		emailID = form.emailID.data
+		password = form.password.data
+		userData = db.userData_db.find_one({'EmailID': emailID})
+		if(userData is None):
+			msg="User not found"
+		else:
+			try:
+				storedPassword = userData["Password"]
+				if(storedPassword!=password):
+					msg = "password do not match"
+				else:
+					msg = "logged in successfully"
+			except:
+				msg = "some error occured"
+		return render_template('login.html',form=form,msg=msg)
+	return render_template('login.html',form=form,msg=msg)
 
 @app.route('/homepage',methods=['GET','POST'])
 def homepage():
@@ -82,10 +102,6 @@ def messages():
 def page_not_found(error):
 	return render_template('404.html',title='404')
 
-@app.errorhandler(500)
-@app.route("/error500")
-def requests_error(error):
-	return render_template('500.html',title='500')
 
 port = int(os.getenv('PORT', '3000'))
-app.run(host='0.0.0.0', port=port)
+app.run(host='127.0.0.1', port=port)
