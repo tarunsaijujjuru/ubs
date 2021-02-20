@@ -5,9 +5,8 @@ import sys
 from flask import Flask,render_template, url_for, flash, redirect, request
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from flask_bootstrap import Bootstrap
-from wtforms import StringField, IntegerField, SubmitField, SelectField
+from wtforms import StringField, IntegerField, SubmitField, SelectField, validators
 from wtforms.validators import DataRequired
 
 app = Flask(__name__)
@@ -19,6 +18,10 @@ app.config['SECRET_KEY'] = 'blah blah blah blah'
 class NameForm(FlaskForm):
 	name = StringField('Name', default="Bruce Springsteen")
 	submit = SubmitField('Submit')
+
+class searchbar(FlaskForm):
+	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
+	# submit = SubmitField('Search')
 
 # ROUTES!
 @app.route('/',methods=['GET','POST'])
@@ -52,6 +55,27 @@ def help():
 		'label':label,
 		'value':value})
 	return render_template('help.html',text_list=text_list,title='help')
+
+
+@app.route('/homepage',methods=['GET','POST'])
+def homepage():
+	form = searchbar()
+	if form.validate_on_submit():
+		searchString = form.search.data
+		print(searchString)
+		return render_template('homepage.html',form=form, searchString=searchString)
+	return render_template('homepage.html',form=form)
+
+
+@app.route('/messages',methods=['GET'])
+def messages():
+	form = searchbar()
+	if form.validate_on_submit():
+		searchString = form.search.data
+		print(searchString)
+		return render_template('messages.html',form=form, searchString=searchString)
+	return render_template('messages.html',form=form)
+
 
 @app.errorhandler(404)
 @app.route("/error404")
