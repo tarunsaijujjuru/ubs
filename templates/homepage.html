@@ -66,6 +66,7 @@
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 1px 3px rgb(163, 163, 163);
+        overflow: scroll;
         }
 
         .feed-post-card {
@@ -89,36 +90,17 @@
         </div>
     </div>
     <div class="feed">
-        <div class="container">
-            <div class="feed_container">
-                <div class="card feed-post-card">
+        <div class="feed_container">
+            {% for card in cards %}
+                <div class="card w-75" style="margin:10px;">
+                    <img class="card-img-top" src= {{card['image']}} alt="Card image cap">
                     <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Posted on Feb 24, 2021</small></p>
+                    <h5 class="card-title">{{card['title']}}</h5>
+                    <p class="card-text">{{card['body']}}</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
-                    <img class="feed-post-img" src="https://images.ctfassets.net/hrltx12pl8hq/4f6DfV5DbqaQUSw0uo0mWi/ff068ff5fc855601751499d694c0111a/shutterstock_376532611.jpg?fit=fill&w=800&h=300" class="card-img-bottom" alt="...">
                 </div>
-                <div class="card feed-post-card">
-                    <div class="card-header">
-                        Featured #ad
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Posted on Feb 24, 2021</small></p>
-                    </div>
-                    <img class="feed-post-img" src="https://images.ctfassets.net/hrltx12pl8hq/4f6DfV5DbqaQUSw0uo0mWi/ff068ff5fc855601751499d694c0111a/shutterstock_376532611.jpg?fit=fill&w=800&h=300" class="card-img-bottom" alt="...">
-                </div>
-                <div class="card feed-post-card">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                      <p class="card-text"><small class="text-muted">Posted on Feb 24, 2021</small></p>
-                    </div>
-                    <img class="feed-post-img" src="https://images.ctfassets.net/hrltx12pl8hq/4f6DfV5DbqaQUSw0uo0mWi/ff068ff5fc855601751499d694c0111a/shutterstock_376532611.jpg?fit=fill&w=800&h=300" class="card-img-bottom" alt="...">
-                </div>
-            </div>
+            {% endfor%}
         </div>
     </div>
 {% endblock %}
