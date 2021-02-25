@@ -74,15 +74,30 @@ def login():
 					session['EmailID'] = userData['EmailID']
 					session['FirstName'] = userData['FirstName']
 					session['LastName'] = userData['LastName']
-					return render_template('homepage.html', form=form)
+					return redirect('/homepage')
 			except:
 				msg = "some error occured"
 		return render_template('login.html',form=form,msg=msg)
 	return render_template('login.html',form=form,msg=msg)
 
+@app.route('/logout',methods=['GET'])
+def logout():
+	session.pop("EmailID", None)
+	session.pop("FirstName", None)
+	session.pop("LastName", None)
+	print(session)
+	return redirect('/login')
+
 @app.route('/homepage',methods=['GET','POST'])
 def homepage():
 	form = searchbar()
+	# Checking session
+	print(session)
+
+	if(('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+
 	cards = [
 			{
 				"title" : "card title 1",
@@ -110,6 +125,14 @@ def homepage():
 @app.route('/messages',methods=['GET'])
 def messages():
 	form = searchbar()
+
+	# Checking session
+	print(session)
+
+	if(('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+
 	if form.validate_on_submit():
 		searchString = form.search.data
 		print(searchString)
