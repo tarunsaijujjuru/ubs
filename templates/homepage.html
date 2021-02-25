@@ -62,11 +62,14 @@
         display:flex;
         flex-direction:column;
         height: 98vh;
-        width:95vw;
         padding:10px;
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 1px 3px rgb(163, 163, 163);
+        }
+
+        .feed-post-card {
+            margin: 5px;
         }
     </style>
     {% if searchString %}
@@ -78,6 +81,7 @@
         <div class="header-name">
             <h1> UBS </h1>
         </div>
+        <p>{{ session['FirstName'] }}</p>
         {{ wtf.quick_form(form, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10), extra_classes='header-search') }}
         <div class="header-right">
             <a href="/messages"><h1 id=messagesTab >Messages</h1></a>
@@ -85,15 +89,37 @@
         </div>
     </div>
     <div class="feed">
-        <div class="feed_container">
-            <h3>card 1</h3>
-            <h3>card 2</h3>
-            <h3>card 3</h3>
-            <h3>card 4</h3>
-            <h3>card 5</h3>
-            <h3>card 6</h3>
-            <h3>card 7</h3>
+        <div class="container">
+            <div class="feed_container">
+                <div class="card feed-post-card">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      <p class="card-text"><small class="text-muted">Posted on Feb 24, 2021</small></p>
+                    </div>
+                    <img class="feed-post-img" src="https://images.ctfassets.net/hrltx12pl8hq/4f6DfV5DbqaQUSw0uo0mWi/ff068ff5fc855601751499d694c0111a/shutterstock_376532611.jpg?fit=fill&w=800&h=300" class="card-img-bottom" alt="...">
+                </div>
+                <div class="card feed-post-card">
+                    <div class="card-header">
+                        Featured #ad
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      <p class="card-text"><small class="text-muted">Posted on Feb 24, 2021</small></p>
+                    </div>
+                    <img class="feed-post-img" src="https://images.ctfassets.net/hrltx12pl8hq/4f6DfV5DbqaQUSw0uo0mWi/ff068ff5fc855601751499d694c0111a/shutterstock_376532611.jpg?fit=fill&w=800&h=300" class="card-img-bottom" alt="...">
+                </div>
+                <div class="card feed-post-card">
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                      <p class="card-text"><small class="text-muted">Posted on Feb 24, 2021</small></p>
+                    </div>
+                    <img class="feed-post-img" src="https://images.ctfassets.net/hrltx12pl8hq/4f6DfV5DbqaQUSw0uo0mWi/ff068ff5fc855601751499d694c0111a/shutterstock_376532611.jpg?fit=fill&w=800&h=300" class="card-img-bottom" alt="...">
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
 {% endblock %}
 
