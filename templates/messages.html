@@ -11,7 +11,7 @@
     width: 100%;
     }
     .header-name{
-    flex: .25;
+    flex: .20;
     color: azure;
     margin-left: 2%;
     }
@@ -23,7 +23,7 @@
     border: 1px solid black;
     }
     .header-right{
-    flex: 0.15;
+    flex: 0.20;
     display: flex;
     color: azure;
     justify-content: space-evenly;
@@ -51,6 +51,14 @@
         text-transform: scaleX(1.08);
         color: dimgray;
     }
+    #logoutButTab{
+    text-decoration: none !important;
+    color: azure;
+    }
+    #logoutButTab:hover{
+        text-transform: scaleX(1.08);
+        color: dimgray;
+    }
     .feed{
     height: 100vh;
     width:100vw;
@@ -69,6 +77,10 @@
     box-shadow: 0 1px 3px rgb(163, 163, 163);
     overflow: scroll;
     }
+
+    .navbarButs {
+      margin-right: 5px;
+    }
 </style>
 {% if searchString %}
 <div class="alert alert-primary" role="alert">
@@ -81,10 +93,10 @@
     </div>
     {{ wtf.quick_form(form, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10), extra_classes='header-search') }}
     <div class="header-right">
-        <a href="/messages"><h1 id=messagesTab >Messages</h1></a>
-        <a href="/homepage"><h1 id=homeTab >Home</h1></a>
+        <a href="/messages"><h1 class="navbarButs" id=messagesTab >Messages</h1></a>
+        <a href="/homepage"><h1 class="navbarButs" id=homeTab >Home</h1></a>
         <a href="/logout">
-          <h1 id=homeTab>Logout></h1>
+          <h1 class="navbarButs" id=logoutButTab>Logout></h1>
         </a>
     </div>
 </div>
