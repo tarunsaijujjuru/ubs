@@ -83,11 +83,28 @@ def login():
 @app.route('/homepage',methods=['GET','POST'])
 def homepage():
 	form = searchbar()
+	cards = [
+			{
+				"title" : "card title 1",
+				"body" : "body 1",
+				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+			},
+			{
+				"title" : "card title 2",
+				"body" : "body 1",
+				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+			},
+			{
+				"title" : "card title 3",
+				"body" : "body 1",
+				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+			}
+		]
 	if form.validate_on_submit():
 		searchString = form.search.data
 		print(searchString)
-		return render_template('homepage.html',form=form, searchString=searchString)
-	return render_template('homepage.html',form=form)
+		return render_template('homepage.html',form=form, searchString=searchString, cards=cards)
+	return render_template('homepage.html',form=form, cards=cards)
 
 
 @app.route('/messages',methods=['GET'])

@@ -67,6 +67,7 @@
         background-color: white;
         border-radius: 10px;
         box-shadow: 0 1px 3px rgb(163, 163, 163);
+        overflow: scroll;
         }
     </style>
     {% if searchString %}
@@ -86,13 +87,16 @@
     </div>
     <div class="feed">
         <div class="feed_container">
-            <h3>card 1</h3>
-            <h3>card 2</h3>
-            <h3>card 3</h3>
-            <h3>card 4</h3>
-            <h3>card 5</h3>
-            <h3>card 6</h3>
-            <h3>card 7</h3>
+            {% for card in cards %}
+                <div class="card w-75" style="margin:10px;">
+                    <img class="card-img-top" src= {{card['image']}} alt="Card image cap">
+                    <div class="card-body">
+                    <h5 class="card-title">{{card['title']}}</h5>
+                    <p class="card-text">{{card['body']}}</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            {% endfor%}
         </div>
       </div>
 {% endblock %}
