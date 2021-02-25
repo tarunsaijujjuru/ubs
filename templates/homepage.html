@@ -111,13 +111,20 @@
             {% for card in cards %}
             <div class="row">
                 <div class="col-1">
-
+                    {% if card['postType']=='ad' %}
+                    Advertisement
+                    {% endif %}
                 </div>
+
                 <div class="card w-75" style="margin:10px;">
-                    <img class="card-img-top" src={{card['image']}} alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{card['title']}}</h5>
                         <p class="card-text">{{card['body']}}</p>
+                    </div>
+                    {% if card['image'] %}
+                    <img class="card-img-top" src={{card['image']}} alt="Card image cap">
+                    {% endif %}
+                    <div class="card-body">
                         <a href="#" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
@@ -126,7 +133,21 @@
                 </div>
             </div>
             {% endfor%}
-
+            <div class="row">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                      <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                      </li>
+                      <li class="page-item"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                      </li>
+                    </ul>
+                  </nav>
+            </div>
         </div>
     </div>
 </div>

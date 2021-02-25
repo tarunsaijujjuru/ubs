@@ -100,20 +100,35 @@ def homepage():
 
 	cards = [
 			{
+				"postType": "exc",
 				"title" : "card title 1",
-				"body" : "body 1",
+				"body" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bestiarum vero nullum iudicium puto. Illa tamen simplicia, vestra versuta. Minime vero istorum quidem, inquit. ",
 				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
 			},
 			{
+				"postType": "exc",
+				"title" : "card title 1",
+				"body" : "Quid est enim aliud esse versutum? Ut aliquid scire se gaudeant? Estne, quaeso, inquam, sitienti in bibendo voluptas? Vide, quantum, inquam, fallare, Torquate.",
+			},
+			{
+				"postType": "ad",
 				"title" : "card title 2",
-				"body" : "body 1",
+				"body" : "Certe non potest. Vitae autem degendae ratio maxime quidem illis placuit quieta. Prave, nequiter, turpiter cenabat; Gloriosa ostentatio in constituendo summo bono.",
 				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
 			},
 			{
+				"postType": "sal",
 				"title" : "card title 3",
-				"body" : "body 1",
+				"body" : "Videamus animi partes, quarum est conspectus illustrior; Nullus est igitur cuiusquam dies natalis. Nam ante Aristippus, et ille melius. Non est igitur voluptas bonum. At ille pellit, qui permulcet sensum voluptate. Praeteritis, inquit, gaudeo. Atqui reperies, inquit, in hoc quidem pertinacem; Frater et T.",
+				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+			},
+			{
+				"postType": "exc",
+				"title" : "card title 3",
+				"body" : "Videamus animi partes, quarum est conspectus illustrior; Nullus est igitur cuiusquam dies natalis. Nam ante Aristippus, et ille melius. Non est igitur voluptas bonum. At ille pellit, qui permulcet sensum voluptate. Praeteritis, inquit, gaudeo. Atqui reperies, inquit, in hoc quidem pertinacem; Frater et T.",
 				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
 			}
+
 		]
 	if form.validate_on_submit():
 		searchString = form.search.data
