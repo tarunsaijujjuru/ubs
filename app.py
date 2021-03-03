@@ -99,37 +99,26 @@ def homepage():
 		return redirect('/login')
 
 	cards = [
-			{
-				"postType": "exc",
-				"title" : "card title 1",
-				"body" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Bestiarum vero nullum iudicium puto. Illa tamen simplicia, vestra versuta. Minime vero istorum quidem, inquit. ",
-				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
-			},
-			{
-				"postType": "exc",
-				"title" : "card title 1",
-				"body" : "Quid est enim aliud esse versutum? Ut aliquid scire se gaudeant? Estne, quaeso, inquam, sitienti in bibendo voluptas? Vide, quantum, inquam, fallare, Torquate.",
-			},
-			{
-				"postType": "ad",
-				"title" : "card title 2",
-				"body" : "Certe non potest. Vitae autem degendae ratio maxime quidem illis placuit quieta. Prave, nequiter, turpiter cenabat; Gloriosa ostentatio in constituendo summo bono.",
-				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
-			},
-			{
-				"postType": "sal",
-				"title" : "card title 3",
-				"body" : "Videamus animi partes, quarum est conspectus illustrior; Nullus est igitur cuiusquam dies natalis. Nam ante Aristippus, et ille melius. Non est igitur voluptas bonum. At ille pellit, qui permulcet sensum voluptate. Praeteritis, inquit, gaudeo. Atqui reperies, inquit, in hoc quidem pertinacem; Frater et T.",
-				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
-			},
-			{
-				"postType": "exc",
-				"title" : "card title 3",
-				"body" : "Videamus animi partes, quarum est conspectus illustrior; Nullus est igitur cuiusquam dies natalis. Nam ante Aristippus, et ille melius. Non est igitur voluptas bonum. At ille pellit, qui permulcet sensum voluptate. Praeteritis, inquit, gaudeo. Atqui reperies, inquit, in hoc quidem pertinacem; Frater et T.",
-				"image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
-			}
-
-		]
+      {
+        "postType": "exc",
+        "title" : "Philosophy Quotes",
+        "body" : "'Whereof one cannot speak, thereof one must be silent' – Ludwig Wittgenstein",
+        "image" : "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"
+      },
+      {
+        "postType": "ad",
+        "title" : "Pepsi",
+        "body" : "Watch, interact and learn more about the songs, characters, and celebrities that appear in your favorite Pepsi TV Commercials.",
+        "image" : "https://i1.wp.com/www.blogtowers.com/wp-content/uploads/2019/07/pepsi.png?fit=789%2C432"
+      },
+      {
+        "postType": "sal",
+        "title" : "Trek Bicycle East Tarrant County",
+        "body" : "Cycling shop offering sales & service of a wide range of bikes, plus clothing, parts & accessories.",
+        "image" : "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/bike-for-sale-06-1570044268.jpg?resize=480:*"
+      },
+    ]
+	
 	if form.validate_on_submit():
 		searchString = form.search.data
 		print(searchString)
