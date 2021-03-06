@@ -35,6 +35,9 @@ class LoginForm(FlaskForm):
 class searchbar(FlaskForm):
 	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
 
+class clubsForm(FlaskForm):
+	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
+
 @app.route('/register',methods=['GET','POST'])
 def register():
 	form = registerForm()
@@ -79,6 +82,74 @@ def login():
 				msg = "some error occured"
 		return render_template('login.html',form=form,msg=msg)
 	return render_template('login.html',form=form,msg=msg)
+
+@app.route('/clubs', methods=['GET'])
+def clubs():
+	form = clubsForm()
+
+	if(('EmailID' not in session)):
+		return redirect('/login')
+
+	clubs = db.clubs.find({})
+	user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['clubs']
+	return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs)
+
+@app.route('/create_club', methods=['POST'])
+def create_club():
+	form = clubsForm()
+
+	if(('EmailID' not in session)):
+		return redirect('/login')
+
+	clubs = db.clubs.find({})
+
+	if form.validate_on_submit():
+		club_name = form.club_name.data
+		club = db.clubs.find_one({'name': club_name})
+
+		if club is None:
+			db.clubs.insert_one({'name': club_name, 'users': [session['EmailID']]})
+			msg = 'Club is created'
+		else:
+			msg = 'Club already exists. Please choose other name'
+		return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
+	return render_template('clubs.html', form=form, clubs=clubs)
+
+@app.route('/join_club', methods=['POST'])
+def join_club():
+	form = clubsForm()
+
+	if(('EmailID' not in session)):
+		return redirect('/login')
+
+	if form.validate_on_submit():
+		club_name = form.club_name.data
+		users = db.clubs.find_one({'name': club_name})['users']
+		users.append(session['EmailID'])
+		db.clubs.update_one({'name': club_name}, {'$set': {'users': users}})
+		msg = "Joined the club successfully"
+	clubs = db.clubs.find({})
+	return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
+
+@app.route('/leave_club', methods=['POST'])
+def leave_club():
+	form = clubsForm()
+
+	if(('EmailID' not in session)):
+		return redirect('/login')
+
+	if form.validate_on_submit():
+		club_name = form.club_name.data
+		users = db.clubs.find_one({'name': club_name})['users']
+		users.remove(session['EmailID'])
+		if len(users) == 0:
+			db.clubs.delete_one({'name': club_name})
+			msg = "Left and the club is deleted due to zero users"
+		else:
+			db.clubs.update_one({'name': club_name}, {'$set': {'users': users}})
+			msg = "Left the club successfully"
+	clubs = db.clubs.find({})
+	return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
 
 @app.route('/logout',methods=['GET'])
 def logout():
