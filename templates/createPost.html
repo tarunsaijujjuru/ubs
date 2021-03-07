@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block app_content %}
+
+    <h3>Create Post</h3>
+    <hr>
+    {% if msg%}
+        <div class="alert alert-primary" role="alert">
+            <h4 > {{msg}} </h4>
+        </div>
+    {% endif %}
+    {% if form%}
+        <form action="/createPost" method="post" class="form" role="form">
+            {{form.csrf_token}}
+            <div class="row">
+                <div class="form-group col-md-6">
+                    {{ wtf.form_field(form.Title, class='form-control',
+                        placeholder='Title') }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ wtf.form_field(form.Type, class='form-control',
+                        placeholder='Type') }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    {{ wtf.form_field(form.Description, class='form-control',
+                        placeholder='Description') }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ wtf.form_field(form.Image, class='form-control',
+                        placeholder='Image') }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    {{ wtf.form_field(form.shareTo, class='form-control',
+                        placeholder='Share To') }}
+                </div>
+
+            </div>
+            <div class="form-group">
+                {{ wtf.form_field(form.submit, class='btn btn-primary') }}
+            </div>
+        </form>
+    {% endif %}
+
+{% endblock %}
