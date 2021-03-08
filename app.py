@@ -33,10 +33,11 @@ class LoginForm(FlaskForm):
 	submit = SubmitField('Submit')
 
 class searchbar(FlaskForm):
-	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
+	search = StringField('Search',[validators.DataRequired()], render_kw={"placeholder": "Search"})
 
 class clubsForm(FlaskForm):
-	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
+	clubName = StringField('Club Name', [validators.DataRequired()])
+	submit = SubmitField('submit')
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -92,6 +93,7 @@ def clubs():
 
 	clubs = db.clubs.find({})
 	user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['clubs']
+
 	return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs)
 
 @app.route('/create_club', methods=['POST'])
@@ -104,7 +106,7 @@ def create_club():
 	clubs = db.clubs.find({})
 
 	if form.validate_on_submit():
-		club_name = form.club_name.data
+		club_name = form.clubName.data
 		club = db.clubs.find_one({'name': club_name})
 
 		if club is None:

@@ -1,0 +1,36 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+      <a style="font-size:20px;" href="#"><span class="glyphicon glyphicon"></span>Clubs</a>
+{#      <a style="font-size:20px;" href="{{ url_for('register') }}"><span class="glyphicon glyphicon-user"></span> </a>#}
+{#      <a style="font-size:20px;" href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a>#}
+  </div>
+</nav>
+{% endblock %}
+
+{% block app_content %}
+
+    {% if msg%}
+        <div class="alert alert-primary" role="alert">
+            <h4 > {{msg}} </h4>
+        </div>
+    {% endif %}
+    <form action="/create_club" method="post" class="form" role="form">
+        {{form.csrf_token}}
+        <div class="row">
+            <div class="form-group col-md-6">
+                {{ wtf.form_field(form.clubName, class='form-control',
+                    placeholder='Club Name') }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ wtf.form_field(form.submit, class='btn btn-primary') }}
+        </div>
+    </form>
+
+
+{% endblock %}
+
