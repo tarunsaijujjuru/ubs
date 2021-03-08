@@ -107,13 +107,13 @@ def create_club():
 	clubs = db.clubs.find({})
 
 	if form.validate_on_submit():
-		club_name = form.club_name.data
+		club_name = form.clubName.data
 		club = db.clubs.find_one({'name': club_name})
 		user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['Clubs']
 
 		if club is None:
 			db.clubs.insert_one({'name': club_name, 'users': [session['EmailID']]})
-			user_clubs = user_clubs.append(club_name)
+			user_clubs.append(club_name)
 			db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': user_clubs}})
 			msg = 'Club is created'
 			clubs = db.clubs.find({})
@@ -134,13 +134,13 @@ def join_club():
 		users.append(session['EmailID'])
 		db.clubs.update_one({'name': club_name}, {'$set': {'users': users}})
 
-		user = db.userData_db.find_one({'EmailID': session['EmailID']})
-		clubs = user['Clubs'].append(club_name)
-		db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': clubs}})
+		user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['Clubs']
+		user_clubs.append(club_name)
+		db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': user_clubs}})
 
 		msg = "Joined the club successfully"
 		clubs = db.clubs.find({})
-		return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
+		return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs, msg=msg)
 	clubs = db.clubs.find({})
 	return render_template('clubs.html', form=form, clubs=clubs, msg="")
 
@@ -151,8 +151,8 @@ def leave_club():
 	if(('EmailID' not in session)):
 		return redirect('/login')
 
-	if form.validate_on_submit():
-		club_name = form.club_name.data
+	if request.method == 'POST':
+		club_name = request.get_json(force=True)['club_name']
 		users = db.clubs.find_one({'name': club_name})['users']
 		users.remove(session['EmailID'])
 		if len(users) == 0:
@@ -162,10 +162,11 @@ def leave_club():
 			db.clubs.update_one({'name': club_name}, {'$set': {'users': users}})
 			msg = "Left the club successfully"
 
-		user = db.userData_db.find_one({'EmailID': session['EmailID']})
-		clubs = user['Clubs'].remove(club_name)
-		db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': clubs}})
-	clubs = db.clubs.find({})
+		user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['Clubs']
+		user_clubs.remove(club_name)
+		db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': user_clubs}})
+		clubs = db.clubs.find({})
+		return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs, msg=msg)
 	return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
 
 @app.route('/logout',methods=['GET'])

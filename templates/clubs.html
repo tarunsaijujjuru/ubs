@@ -28,12 +28,18 @@
         }
 
         function leaveClub(club_name){
-            console.log('test');
-            // $.ajax({
-            //     type: 'POST',
-            //     url: '/leave_club',
-            //     data: {club_name: club_name}
-            // });
+            $.ajax({
+                type: 'POST',
+                url: '/leave_club',
+                data: JSON.stringify({club_name: club_name}),
+                contentType: 'application/json; charset=utf-8',
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
         }
     </script>
 
