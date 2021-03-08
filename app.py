@@ -37,6 +37,7 @@ class searchbar(FlaskForm):
 
 class clubsForm(FlaskForm):
 	clubName = StringField('Club Name', [validators.DataRequired()])
+	description = StringField('Club Description', [validators.DataRequired()])
 	submit = SubmitField('submit')
 
 @app.route('/register',methods=['GET','POST'])
@@ -92,9 +93,9 @@ def clubs():
 		return redirect('/login')
 
 	clubs = db.clubs.find({})
-	user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['clubs']
+	user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['Clubs']
 
-	return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs)
+	return render_template('clubs.html', form= form, cards=clubs, user_clubs=user_clubs)
 
 @app.route('/create_club', methods=['POST'])
 def create_club():
