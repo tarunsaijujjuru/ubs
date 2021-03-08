@@ -33,7 +33,7 @@ class LoginForm(FlaskForm):
 	submit = SubmitField('Submit')
 
 class searchbar(FlaskForm):
-	search = StringField('Search',[validators.DataRequired()], render_kw={"placeholder": "Search"})
+	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
 
 class clubsForm(FlaskForm):
 	clubName = StringField('Club Name', [validators.DataRequired()])
@@ -46,7 +46,7 @@ def register():
 	if form.validate_on_submit():
 		userData = db.userData_db.find_one({'EmailID': form.emailID.data})
 		if userData is None:
-			userDataRegistraion = {'FirstName': form.firstName.data, 'LastName': form.lastName.data, 'EmailID': form.emailID.data ,'Password': form.password.data }
+			userDataRegistraion = {'FirstName': form.firstName.data, 'LastName': form.lastName.data, 'EmailID': form.emailID.data , 'Password': form.password.data, 'Clubs': []}
 			db.userData_db.insert_one(userDataRegistraion).inserted_id
 			msg = "Registration Succesful Please Login"
 			return render_template('register.html',form=form, msg=msg)
@@ -107,16 +107,20 @@ def create_club():
 	clubs = db.clubs.find({})
 
 	if form.validate_on_submit():
-		club_name = form.clubName.data
+		club_name = form.club_name.data
 		club = db.clubs.find_one({'name': club_name})
+		user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['Clubs']
 
 		if club is None:
 			db.clubs.insert_one({'name': club_name, 'users': [session['EmailID']]})
+			user_clubs = user_clubs.append(club_name)
+			db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': user_clubs}})
 			msg = 'Club is created'
+			clubs = db.clubs.find({})
 		else:
 			msg = 'Club already exists. Please choose other name'
-		return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
-	return render_template('clubs.html', form=form, clubs=clubs)
+		return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs, msg=msg)
+	return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs)
 
 @app.route('/join_club', methods=['POST'])
 def join_club():
@@ -129,6 +133,11 @@ def join_club():
 		users = db.clubs.find_one({'name': club_name})['users']
 		users.append(session['EmailID'])
 		db.clubs.update_one({'name': club_name}, {'$set': {'users': users}})
+
+		user = db.userData_db.find_one({'EmailID': session['EmailID']})
+		clubs = user['Clubs'].append(club_name)
+		db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': clubs}})
+
 		msg = "Joined the club successfully"
 		clubs = db.clubs.find({})
 		return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
@@ -152,6 +161,10 @@ def leave_club():
 		else:
 			db.clubs.update_one({'name': club_name}, {'$set': {'users': users}})
 			msg = "Left the club successfully"
+
+		user = db.userData_db.find_one({'EmailID': session['EmailID']})
+		clubs = user['Clubs'].remove(club_name)
+		db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': clubs}})
 	clubs = db.clubs.find({})
 	return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
 
