@@ -1,6 +1,24 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 
+<script>
+    function joinClub(club_name){
+        $.ajax({
+            type: 'POST',
+            url: '/join_club',
+            data: {club_name: club_name}
+        });
+    }
+    
+    function leaveClub(club_name){
+        $.ajax({
+            type: 'POST',
+            url: '/leave_club',
+            data: {club_name: club_name}
+        });
+    }
+</script>
+
 {% block navbar %}
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -43,50 +61,26 @@
     <div class="feed_container">
         <div class="row">
             <div class="container">
+                {% for club in clubs %}
+                    <div class="row">
+                        <div class="card w-75" style="margin:10px;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{club['name']}}</h5>
+                                <p class="card-text">{{club['description']}}</p>
+                            </div>
 
-                {% for card in cards %}
-                <div class="row">
-                    <div class="col-1">
-                        {% if card['potsType']=='ad' %}
-                        Advertisement
-                        {% endif %}
-                    </div>
-
-                    <div class="card w-75" style="margin:10px;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{card['name']}}</h5>
-                            <p class="card-text">{{card['description']}}</p>
-                        </div>
-                        {% if card['image'] %}
-                        <img class="card-img-top" src={{card['image']}} alt="Card image cap">
-                        {% endif %}
-                        <div class="card-body">
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                            <div class="card-body">
+                                {% if club['name'] in user_clubs %}
+                                    <button class="btn btn-primary" onclick="leaveClub({{ club['name'] }})">Leave</a>
+                                {% else %}
+                                    <button class="btn btn-primary" onclick="joinClub({{ club['name'] }})">Join</a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-1">
-
-                    </div>
-                </div>
                 {% endfor%}
-                <div class="row">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                          <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                          </li>
-                          <li class="page-item"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                          </li>
-                        </ul>
-                      </nav>
-                </div>
             </div>
         </div>
     </div>
 
 {% endblock %}
-
