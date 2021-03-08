@@ -121,18 +121,19 @@ def create_club():
 @app.route('/join_club', methods=['POST'])
 def join_club():
 	form = clubsForm()
-
 	if(('EmailID' not in session)):
 		return redirect('/login')
 
-	if form.validate_on_submit():
-		club_name = form.club_name.data
+	if request.method == 'POST':
+		club_name = request.get_json(force=True)['club_name']
 		users = db.clubs.find_one({'name': club_name})['users']
 		users.append(session['EmailID'])
 		db.clubs.update_one({'name': club_name}, {'$set': {'users': users}})
 		msg = "Joined the club successfully"
+		clubs = db.clubs.find({})
+		return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
 	clubs = db.clubs.find({})
-	return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
+	return render_template('clubs.html', form=form, clubs=clubs, msg="")
 
 @app.route('/leave_club', methods=['POST'])
 def leave_club():
@@ -227,4 +228,4 @@ def page_not_found(error):
 port = int(os.getenv('PORT', '3000'))
 
 if __name__ == "__main__":
-	app.run(host='127.0.0.1', port=port)
+	app.run(host='127.0.0.1', port=port, debug=True)
