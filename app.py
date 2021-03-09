@@ -4,6 +4,7 @@ import os
 import pymongo
 import json
 import urllib
+import gridfs
 import time
 from flask import Flask,render_template, url_for, flash, redirect, request, session
 from flask_wtf import FlaskForm
@@ -14,6 +15,7 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_cl
 from wtforms.validators import InputRequired, Email, DataRequired
 from wtforms.fields.html5 import EmailField
 from wtforms.widgets import TextArea
+from bson import ObjectId
 
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
@@ -44,14 +46,14 @@ class LoginForm(FlaskForm):
 	submit = SubmitField('Submit')
 
 class createPostForm(FlaskForm):
-	Title = StringField('Title')
+	Title = StringField('Title',[validators.DataRequired()])
 	Type = SelectField(
 		'Type',
 		choices=[('Exchange', 'Exchange'), ('Sales', 'Sales'), ('Ad', 'Ad')]
 	)
-	Description = StringField('Description', widget=TextArea())
+	Description = StringField('Description',[validators.DataRequired()], widget=TextArea())
 	Image = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
-	shareTo = SelectField('Share To')
+	shareTo = SelectField('Share To',[validators.DataRequired()])
 	submit = SubmitField('Create')
 
 
@@ -60,9 +62,6 @@ class createPostForm(FlaskForm):
 
 class searchbar(FlaskForm):
 	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
-
-
-
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -89,22 +88,30 @@ def createPost():
 
 	form = createPostForm()
 	userData = db.userData_db.find_one({'EmailID': session['EmailID']})
-	postTo = userData['Clubs']
+	postTo = ['No clubs found']
+	if 'Clubs' in userData:
+		postTo = userData['Clubs']
 	form.shareTo.choices = postTo
 	if request.method == 'POST':
 		if form.validate_on_submit():
-			filename = photos.save(form.photo.data)
-			file_url = photos.url(filename)
+			fs = gridfs.GridFS(db)
+			if postTo == 'No clubs found':
+				msg = "no clubs are found"
+				return render_template('createPost.html', msg=msg,form = form)
+			file_id = fs.put(form.Image.data, filename=form.Image.data.filename)
 			PostData = {'Title': form.Title.data,
 						'Type': form.Type.data,
 						'Description': form.Description.data,
-						'Image': file_url,
+						'Image': file_id,
 						'TimeStamp':time.time() ,
 						'postedBy':session['EmailID'],
 						'postTo': form.shareTo.data }
-			db.clubs.insert_one(PostData).inserted_id
+			db.posts.insert_one(PostData).inserted_id
 			msg = "Create Post Succesful"
-			return render_template('createPost.html', msg=msg)
+
+			# image_data = fs.get(ObjectId('60446568ab7abf152435dd5d'))
+			# image_data = image_data.read()
+			return render_template('createPost.html', msg=msg,form = form)
 
 	return render_template('createPost.html', form=form,msg=msg, postTo=postTo)
 

@@ -9,7 +9,7 @@
         </div>
     {% endif %}
     {% if form%}
-        <form action="/createPost" method="post" class="form" role="form">
+        <form action="/createPost" method="post" class="form" role="form" enctype="multipart/form-data">
             {{form.csrf_token}}
             <div class="row">
                 <div class="form-group col-md-6">
@@ -36,12 +36,13 @@
                     {{ wtf.form_field(form.shareTo, class='form-control',
                         placeholder='Share To') }}
                 </div>
-
             </div>
+
             <div class="form-group">
                 {{ wtf.form_field(form.submit, class='btn btn-primary') }}
             </div>
         </form>
+
     {% endif %}
 
 {% endblock %}

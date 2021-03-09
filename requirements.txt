@@ -3,7 +3,6 @@ Flask-WTF
 werkzeug==0.16.1  
 flask-uploads
 flask-bootstrap
-flask-nav
 pymongo
 dnspython
 email_validator
