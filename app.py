@@ -9,6 +9,7 @@ import time
 from flask import Flask,render_template, url_for, flash, redirect, request, session
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
+
 from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators
 import email_validator
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
