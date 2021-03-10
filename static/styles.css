@@ -3,9 +3,10 @@
     justify-content: space-between;
     align-items: center;
     padding-left: 1rem;
-    padding-right: 7rem;
+    padding-right: 3rem;
     background-color: black;
     width: 100%;
+    margin-bottom: 1px;
 }
 
 .header-name {
@@ -25,7 +26,7 @@
     flex: 0.15;
     display: flex;
     color: azure;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -86,9 +87,22 @@
     padding: 10px;
     background-color: white;
     border-radius: 10px;
-    overflow: scroll;
+    overflow-y: scroll;
+    height: 97vh;
 }
 
+.feed_container::-webkit-scrollbar {
+    display: none;
+}
+
+.customcontainer::-webkit-scrollbar {
+    display: none;
+}
+
+.customcontainer {
+    overflow-y: scroll;
+    height: 92vh;
+}
 .feed-post-card {
     margin: 5px;
 }
@@ -100,202 +114,95 @@
 
 
 /* Create Post */
-/*custom font*/
-@import url(https://fonts.googleapis.com/css?family=Montserrat);
-
-/*basic reset*/
-* {
-    margin: 0;
-    padding: 0;
+/* Style the form */
+#regForm {
+  background-color: #ffffff;
+  margin: 100px auto;
+  padding: 40px;
+  width: 70%;
+  min-width: 300px;
 }
 
-html {
-    height: 100%;
-    background: #6441A5; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to left, #6441A5, #2a0845); /* Chrome 10-25, Safari 5.1-6 */
+/* Style the input fields */
+input {
+  padding: 10px;
+  width: 100%;
+  font-size: 17px;
+  font-family: Raleway;
+  border: 1px solid #aaaaaa;
+}
+
+/* Mark input boxes that gets an error on validation: */
+input.invalid {
+  background-color: #ffdddd;
+}
+
+/* Hide all steps by default: */
+.tab {
+  display: none;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbbbbb;
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.5;
+}
+
+/* Mark the active step: */
+.step.active {
+  opacity: 1;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+  background-color: #4CAF50;
 }
 
 body {
-    font-family: montserrat, arial, verdana;
-    background: transparent;
+    font-family: "Lato", sans-serif;
+    height: 100vh;
+  }
+  
+.sidenav {
+height: 100vh;
+position: relative;
+z-index: 1;
+top: 0;
+left: 0;
+background-color: black;
+overflow-x: hidden;
+padding-top: 20px;
 }
 
-/*form styles*/
-#msform {
-    text-align: center;
-    position: relative;
-    margin-top: 30px;
+.sidenav a {
+padding: 6px 8px 6px 16px;
+text-decoration: none;
+font-size: 25px;
+color: #818181;
+display: block;
 }
 
-#msform fieldset {
-    background: white;
-    border: 0 none;
-    border-radius: 0px;
-    box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-    padding: 20px 30px;
-    box-sizing: border-box;
-    width: 80%;
-    margin: 0 10%;
-
-    /*stacking fieldsets above each other*/
-    position: relative;
+.sidenav a:hover {
+color: #f1f1f1;
 }
 
-/*Hide all except first fieldset*/
-#msform fieldset:not(:first-of-type) {
-    display: none;
+.main {
+margin-left: 160px; /* Same as the width of the sidenav */
+font-size: 28px; /* Increased text to enable scrolling */
+padding: 0px 10px;
 }
 
-/*inputs*/
-#msform input, #msform textarea {
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 0px;
-    margin-bottom: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    font-family: montserrat;
-    color: #2C3E50;
-    font-size: 13px;
+.page-navigation {
+    justify-content: space-around;
 }
 
-#msform input:focus, #msform textarea:focus {
-    -moz-box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    border: 1px solid #ee0979;
-    outline-width: 0;
-    transition: All 0.5s ease-in;
-    -webkit-transition: All 0.5s ease-in;
-    -moz-transition: All 0.5s ease-in;
-    -o-transition: All 0.5s ease-in;
-}
-
-/*buttons*/
-#msform .action-button {
-    width: 100px;
-    background: #ee0979;
-    font-weight: bold;
-    color: white;
-    border: 0 none;
-    border-radius: 25px;
-    cursor: pointer;
-    padding: 10px 5px;
-    margin: 10px 5px;
-}
-
-#msform .action-button:hover, #msform .action-button:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #ee0979;
-}
-
-#msform .action-button-previous {
-    width: 100px;
-    background: #C5C5F1;
-    font-weight: bold;
-    color: white;
-    border: 0 none;
-    border-radius: 25px;
-    cursor: pointer;
-    padding: 10px 5px;
-    margin: 10px 5px;
-}
-
-#msform .action-button-previous:hover, #msform .action-button-previous:focus {
-    box-shadow: 0 0 0 2px white, 0 0 0 3px #C5C5F1;
-}
-
-/*headings*/
-.fs-title {
-    font-size: 18px;
-    text-transform: uppercase;
-    color: #2C3E50;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
-    font-weight: bold;
-}
-
-.fs-subtitle {
-    font-weight: normal;
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 20px;
-}
-
-/*progressbar*/
-#progressbar {
-    margin-bottom: 30px;
-    overflow: hidden;
-    /*CSS counters to number the steps*/
-    counter-reset: step;
-}
-
-#progressbar li {
-    list-style-type: none;
-    color: white;
-    text-transform: uppercase;
-    font-size: 9px;
-    width: 33.33%;
-    float: left;
-    position: relative;
-    letter-spacing: 1px;
-}
-
-#progressbar li:before {
-    content: counter(step);
-    counter-increment: step;
-    width: 24px;
-    height: 24px;
-    line-height: 26px;
-    display: block;
-    font-size: 12px;
-    color: #333;
-    background: white;
-    border-radius: 25px;
-    margin: 0 auto 10px auto;
-}
-
-/*progressbar connectors*/
-#progressbar li:after {
-    content: '';
-    width: 100%;
-    height: 2px;
-    background: white;
-    position: absolute;
-    left: -50%;
-    top: 9px;
-    z-index: -1; /*put it behind the numbers*/
-}
-
-#progressbar li:first-child:after {
-    /*connector not needed before the first step*/
-    content: none;
-}
-
-/*marking active/completed steps green*/
-/*The number of the step and the connector before it = green*/
-#progressbar li.active:before, #progressbar li.active:after {
-    background: #ee0979;
-    color: white;
-}
-
-
-/* Not relevant to this form */
-.dme_link {
-    margin-top: 30px;
-    text-align: center;
-}
-.dme_link a {
-    background: #FFF;
-    font-weight: bold;
-    color: #ee0979;
-    border: 0 none;
-    border-radius: 25px;
-    cursor: pointer;
-    padding: 5px 25px;
-    font-size: 12px;
-}
-
-.dme_link a:hover, .dme_link a:focus {
-    background: #C5C5F1;
-    text-decoration: none;
+@media screen and (max-height: 450px) {
+.sidenav {padding-top: 15px;}
+.sidenav a {font-size: 18px;}
 }

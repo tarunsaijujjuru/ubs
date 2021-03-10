@@ -12,6 +12,8 @@ from wtforms import StringField, IntegerField, SubmitField, SelectField, Passwor
 import email_validator
 from wtforms.validators import InputRequired, Email, DataRequired
 from wtforms.fields.html5 import EmailField
+from wtforms.widgets import TextArea
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -35,6 +37,16 @@ class LoginForm(FlaskForm):
 
 class searchbar(FlaskForm):
 	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
+
+class createpost(FlaskForm):
+	title = StringField('Title',[validators.DataRequired()])
+	posttype = SelectField(
+		'posttype',
+		choices=[('Exchange', 'Exchange'), ('Sales', 'Sales'), ('Ad', 'Ad')]
+	)
+	description = StringField('description',[validators.DataRequired()], widget=TextArea())
+	shareTo = SelectField('Share To',[validators.DataRequired()])
+	submit = SubmitField('Create')
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -91,7 +103,8 @@ def logout():
 
 @app.route('/homepage',methods=['GET','POST'])
 def homepage():
-	form = searchbar()
+	searchbarform = searchbar()
+	createpostform = createpost()
 	# Checking session
 	print(session)
 
@@ -120,11 +133,20 @@ def homepage():
       },
     ]
 	
-	if form.validate_on_submit():
-		searchString = form.search.data
+	if searchbarform.validate_on_submit():
+		searchString = searchbarform.search.data
 		print(searchString)
-		return render_template('homepage.html',form=form, searchString=searchString, cards=cards)
-	return render_template('homepage.html',form=form, cards=cards)
+		return render_template('homepage.html',createpostform=createpostform, searchbarform=searchbarform, searchString=searchString, cards=cards)
+
+	if createpostform.validate_on_submit():
+		title = createpostform.title.data
+		posttype = createpostform.posttype.data
+		description = createpostform.description.data
+		shareTo = createpostform.shareTo.data
+		print(title, posttype)
+		return render_template('homepage.html',createpostform=createpostform, searchbarform=searchbarform, cards=cards)
+		
+	return render_template('homepage.html',createpostform=createpostform, searchbarform=searchbarform, cards=cards)
 
 
 @app.route('/messages',methods=['GET'])

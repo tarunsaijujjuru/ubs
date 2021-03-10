@@ -16,6 +16,8 @@
     </div>
 {% endblock %}
 
+{% block side_bar %}
+{% endblock %}
 
 {% block app_content %}
 {% if msg %}
@@ -24,7 +26,7 @@
 </div>
 {% endif %}
 <div class="container">
- <h3>Login</h3>
+ <h2>Login</h2>
 
  <form action="/login" method="post" class="form" role="form">
 {{ form.csrf_token }}

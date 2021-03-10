@@ -17,18 +17,25 @@
 
 {% block content %}
   <div style="display: flex; flex-direction: column;">
-    <div style="flex:0.05">
       {% block nav_bar %}
       {% endblock %}
-    </div>
+
     <div style="flex:0.95">
       <div style="display: flex; ">
-        <div style="flex:0">
-          {% block side_bar %}
-
-          {% endblock %}
-        </div>
-        <div style="flex:1">
+        {% block side_bar %}
+          <div class="sidenav" style="flex:.20;">
+            <a href="/homepage">
+              <h1 >Home</h1>
+           </a>
+            <a href="/messages">
+              <h1 >Messages</h1>
+            </a>
+            <a href="/logout">
+                <h1 >Logout</h1>
+            </a>
+          </div>
+        {% endblock %}
+        <div style="flex:.80">
           {% block app_content %}
           {% endblock %}
         </div>
