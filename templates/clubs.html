@@ -10,6 +10,17 @@
 {% endblock %}
 
 {% block app_content %}
+    <style>
+        .feed_container {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background-color: white;
+        border-radius: 10px;
+        {#overflow: scroll;#}
+        }
+
+    </style>
 
     <script type=text/javascript>
         function joinClub(club_name){
@@ -44,43 +55,54 @@
             });
         }
     </script>
-
-    {% if msg%}
-        <div class="alert alert-primary" role="alert">
-            <h4 > {{msg}} </h4>
-        </div>
-    {% endif %}
     <div class="d-flex justify-content-center align-items-center">
-        <h4>Create Club</h4>
+        <h3>Create Club</h3>
     </div>
 
-    <form action="/create_club" method="post" class="form" role="form">
-        {{form.csrf_token}}
-        <div class="row">
-            <div class="form-group col-sm-6">
-                {{ wtf.form_field(form.clubName, class='form-control',
-                    placeholder='Club Name') }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-sm-6">
-                {{ wtf.form_field(form.description, class='form-control',
-                    placeholder='description') }}
-            </div>
-        </div>
-        <div class="form-group">
-            {{ wtf.form_field(form.submit, class='btn btn-primary') }}
-        </div>
-    </form>
+
+    <div class="d-flex justify-content-center align-items-center">
+        {% if msg%}
+                <div class="alert alert-primary" role="alert">
+                    <h4 > {{msg}} </h4>
+                </div>
+        {% endif %}
+    </div>
 
 
 
     <div class="feed_container">
+        <div class="borders">
+        <div class="row">
+        <div class="col-md-5 col-md-offset-5">
+
+            <form action="/create_club" method="post" class= 'form' role="form">
+                {{form.csrf_token}}
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        {{ wtf.form_field(form.clubName, class='form-control',
+                            placeholder='Club Name') }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        {{ wtf.form_field(form.description, class='form-control',
+                            placeholder='description') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ wtf.form_field(form.submit, class='btn btn-primary') }}
+                </div>
+            </form>
+        </div>>
+        </div>
+    </div>
+
         <div class="row">
             <div class="container">
                 {% for club in clubs %}
                     <div class="row">
-                        <div class="card w-75" style="margin:10px;">
+                        <div class="card w-75" style="margin:30px;">
+
                             <div class="card-body">
                                 <h5 class="card-title">{{club['name']}}</h5>
                                 <p class="card-text">{{club['description']}}</p>
@@ -88,9 +110,9 @@
 
                             <div class="card-body">
                                 {% if club['name'] in user_clubs %}
-                                    <button class="btn btn-primary" onclick="leaveClub('{{ club['name'] }}')">Leave</button>
+                                    <button class="btn btn-primary" id="leavebtn" onclick="leaveClub('{{ club['name'] }}')">Leave</button>
                                 {% else %}
-                                    <button class="btn btn-primary" onclick="joinClub('{{ club['name'] }}')">Join</button>
+                                    <button class="btn btn-primary" id="joinbtn" onclick="joinClub('{{ club['name'] }}')">Join</button>
                                 {% endif %}
                             </div>
                         </div>

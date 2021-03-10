@@ -168,7 +168,8 @@ def leave_club():
 		db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': user_clubs}})
 		clubs = db.clubs.find({})
 		return render_template('clubs.html', form=form, clubs=clubs, user_clubs=user_clubs, msg=msg)
-	return render_template('clubs.html', form=form, clubs=clubs, msg=msg)
+	clubs = db.clubs.find({})
+	return render_template('clubs.html', form=form, clubs=clubs, msg="")
 
 @app.route('/logout',methods=['GET'])
 def logout():
