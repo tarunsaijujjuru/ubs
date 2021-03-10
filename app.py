@@ -10,7 +10,7 @@ from flask import Flask,render_template, url_for, flash, redirect, request, sess
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 
-from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators
+from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators, SelectMultipleField
 import email_validator
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from wtforms.validators import InputRequired, Email, DataRequired
@@ -54,7 +54,8 @@ class createPostForm(FlaskForm):
 	)
 	Description = StringField('Description',[validators.DataRequired()], widget=TextArea())
 	Image = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
-	shareTo = SelectField('Share To',[validators.DataRequired()])
+	Clubs = SelectMultipleField('Share To Clubs')
+	Users = StringField('Comma separated Emails',widget=TextArea())
 	submit = SubmitField('Create')
 
 
@@ -88,33 +89,44 @@ def createPost():
 	msg = ""
 
 	form = createPostForm()
+	SearchForm = searchbar()
 	userData = db.userData_db.find_one({'EmailID': session['EmailID']})
-	postTo = ['No clubs found']
+	postTo = []
 	if 'Clubs' in userData:
-		postTo = userData['Clubs']
-	form.shareTo.choices = postTo
+		for club in userData['Clubs']:
+			newTuple = (club,club)
+			postTo.append(newTuple)
+	form.Clubs.choices = postTo
+	print(form.Clubs.choices)
 	if request.method == 'POST':
 		if form.validate_on_submit():
+			searchString = SearchForm.search.data
 			fs = gridfs.GridFS(db)
-			if postTo == 'No clubs found':
-				msg = "no clubs are found"
-				return render_template('createPost.html', msg=msg,form = form)
 			file_id = fs.put(form.Image.data, filename=form.Image.data.filename)
+			sendToUsers =form.Users.data
+			paymentRequired = False
+			if form.Type.data == 'Sales':
+				paymentRequired = True
+			sendToUsersList =  sendToUsers.split(',')
 			PostData = {'Title': form.Title.data,
 						'Type': form.Type.data,
 						'Description': form.Description.data,
 						'Image': file_id,
 						'TimeStamp':time.time() ,
 						'postedBy':session['EmailID'],
-						'postTo': form.shareTo.data }
+						'postToClubs': form.Clubs.data,
+						'PaymentRequired':paymentRequired,
+						'postToUsers':sendToUsersList}
 			db.posts.insert_one(PostData).inserted_id
 			msg = "Create Post Succesful"
 
 			# image_data = fs.get(ObjectId('60446568ab7abf152435dd5d'))
 			# image_data = image_data.read()
-			return render_template('createPost.html', msg=msg,form = form)
+			return render_template('testPost.html', msg=msg,form = form, SearchForm=SearchForm,searchString=searchString)
+		else:
+			msg = "invalid inputs"
 
-	return render_template('createPost.html', form=form,msg=msg, postTo=postTo)
+	return render_template('testPost.html', form=form,msg=msg,SearchForm=SearchForm)
 
 
 @app.route('/',methods=['GET','POST'])
