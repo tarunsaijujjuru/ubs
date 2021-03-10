@@ -108,11 +108,12 @@ def create_club():
 
 	if form.validate_on_submit():
 		club_name = form.clubName.data
+		description = form.description.data
 		club = db.clubs.find_one({'name': club_name})
 		user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['Clubs']
 
 		if club is None:
-			db.clubs.insert_one({'name': club_name, 'users': [session['EmailID']]})
+			db.clubs.insert_one({'name': club_name, 'users': [session['EmailID']], 'description': description})
 			user_clubs.append(club_name)
 			db.userData_db.update_one({'EmailID': session['EmailID']}, {'$set': {'Clubs': user_clubs}})
 			msg = 'Club is created'

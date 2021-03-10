@@ -4,7 +4,7 @@
 {% block navbar %}
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
-      <a style="font-size:20px;" href="#"><span class="glyphicon glyphicon"></span>Clubs</a>
+      <a style="font-size:20px;" href="/clubs"><span class="glyphicon glyphicon"></span>Clubs</a>
   </div>
 </nav>
 {% endblock %}
@@ -20,6 +20,7 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function(response) {
                     console.log(response);
+                    window.location.reload();
                 },
                 error: function(error) {
                     console.log(error);
@@ -35,6 +36,7 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function(response) {
                     console.log(response);
+                    window.location.reload();
                 },
                 error: function(error) {
                     console.log(error);
