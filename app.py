@@ -4,15 +4,20 @@ import os
 import pymongo
 import json
 import urllib
+import gridfs
+import time
 from flask import Flask,render_template, url_for, flash, redirect, request, session
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 
-from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators
+from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators, SelectMultipleField
 import email_validator
+from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from wtforms.validators import InputRequired, Email, DataRequired
 from wtforms.fields.html5 import EmailField
 from wtforms.widgets import TextArea
+from bson import ObjectId
+
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 app = Flask(__name__)
@@ -21,7 +26,13 @@ bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = 'blah blah blah blah'
 client = pymongo.MongoClient("mongodb+srv://ubs:" + urllib.parse.quote('ubs@12345') + "@cluster0.qxrt7.mongodb.net/ubs?retryWrites=true&w=majority")
 db = client.University_Bazar_db
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
 
+
+photos = UploadSet('photos', IMAGES)
+configure_uploads(app, photos)
+patch_request_class(app)  # set maximum file size, default is 16MB
 
 class registerForm(FlaskForm):
 	firstName = StringField('First Name', [validators.DataRequired()])
@@ -34,6 +45,22 @@ class LoginForm(FlaskForm):
 	emailID = StringField('email ID')
 	password = PasswordField('Password')
 	submit = SubmitField('Submit')
+
+class createPostForm(FlaskForm):
+	Title = StringField('Title',[validators.DataRequired()])
+	Type = SelectField(
+		'Type',
+		choices=[('Exchange', 'Exchange'), ('Sales', 'Sales'), ('Ad', 'Ad')]
+	)
+	Description = StringField('Description',[validators.DataRequired()], widget=TextArea())
+	Image = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
+	Clubs = SelectMultipleField('Share To Clubs')
+	Users = StringField('Comma separated Emails',widget=TextArea())
+	submit = SubmitField('Create')
+
+
+
+
 
 class searchbar(FlaskForm):
 	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
@@ -51,17 +78,66 @@ class createpost(FlaskForm):
 @app.route('/register',methods=['GET','POST'])
 def register():
 	form = registerForm()
-	if form.validate_on_submit():
-		userData = db.userData_db.find_one({'EmailID': form.emailID.data})
-		if userData is None:
-			userDataRegistraion = {'FirstName': form.firstName.data, 'LastName': form.lastName.data, 'EmailID': form.emailID.data ,'Password': form.password.data }
-			db.userData_db.insert_one(userDataRegistraion).inserted_id
-			msg = "Registration Succesful Please Login"
-			return render_template('register.html',form=form, msg=msg)
-		else:
-			msg ="User already exists please login"
-			return render_template('register.html',form=form, msg=msg)
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			userData = db.userData_db.find_one({'EmailID': form.emailID.data})
+			if userData is None:
+				userDataRegistraion = {'FirstName': form.firstName.data, 'LastName': form.lastName.data, 'EmailID': form.emailID.data ,'Password': form.password.data }
+				db.userData_db.insert_one(userDataRegistraion).inserted_id
+				msg = "Registration Succesful Please Login"
+				return render_template('register.html',form=form, msg=msg)
+			else:
+				msg ="User already exists please login"
+				return render_template('register.html',form=form, msg=msg)
 	return render_template('register.html',form=form)
+
+@app.route('/createPost',methods=['GET','POST'])
+def createPost():
+	if(('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+	msg = ""
+
+	form = createPostForm()
+	SearchForm = searchbar()
+	userData = db.userData_db.find_one({'EmailID': session['EmailID']})
+	postTo = []
+	if 'Clubs' in userData:
+		for club in userData['Clubs']:
+			newTuple = (club,club)
+			postTo.append(newTuple)
+	form.Clubs.choices = postTo
+	print(form.Clubs.choices)
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			searchString = SearchForm.search.data
+			fs = gridfs.GridFS(db)
+			file_id = fs.put(form.Image.data, filename=form.Image.data.filename)
+			sendToUsers =form.Users.data
+			paymentRequired = False
+			if form.Type.data == 'Sales':
+				paymentRequired = True
+			sendToUsersList =  sendToUsers.split(',')
+			PostData = {'Title': form.Title.data,
+						'Type': form.Type.data,
+						'Description': form.Description.data,
+						'Image': file_id,
+						'TimeStamp':time.time() ,
+						'postedBy':session['EmailID'],
+						'postToClubs': form.Clubs.data,
+						'PaymentRequired':paymentRequired,
+						'postToUsers':sendToUsersList}
+			db.posts.insert_one(PostData).inserted_id
+			msg = "Create Post Succesful"
+
+			# image_data = fs.get(ObjectId('60446568ab7abf152435dd5d'))
+			# image_data = image_data.read()
+			return render_template('createpost.html', msg=msg,form = form, SearchForm=SearchForm,searchString=searchString)
+		else:
+			msg = "invalid inputs"
+
+	return render_template('createpost.html', form=form,msg=msg,SearchForm=SearchForm)
+
 
 @app.route('/',methods=['GET','POST'])
 def base():
