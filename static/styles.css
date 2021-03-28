@@ -81,7 +81,7 @@
     background-color: white;
 }
 .backgroundPic{
-    background-image: url('mystical.png');
+    background-image: url('backpic1.jpg');
     background-size: 100% 100%;
     width: 100%;
     height: 100%;
@@ -101,9 +101,9 @@
     scrollbar-color: dark ;
 }
 
-.customcontainer::-webkit-scrollbar {
-      
-}
+/*.customcontainer::-webkit-scrollbar {*/
+
+/*}*/
 
 .customcontainer {
     overflow-y: scroll;
@@ -184,10 +184,10 @@ body {
     text-align: center;
     position: relative;
     margin-top: 0px;
-    left: -45%
+    left: -40%
 }
 
-#delBtnForm .action-button {
+.del-button {
     width: 100px;
     background: #ee0979;
     font-weight: bold;
