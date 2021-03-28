@@ -7,6 +7,7 @@
     background-color: black;
     width: 100%;
     margin-bottom: 1px;
+
 }
 
 .header-name {
@@ -111,7 +112,7 @@
     margin-right: 5px;
 }
 
-/* Mark the steps that are finished and valid: */
+
 .step.finish {
   background-color: #4CAF50;
 }
@@ -149,6 +150,7 @@ color: #f1f1f1;
 .sidenav {padding-top: 15px;}
 .sidenav a {font-size: 18px;}
 }
+
 /* Create Post */
 /*custom font*/
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
@@ -160,6 +162,7 @@ color: #f1f1f1;
 }
 
 html {
+
     height: 100vh;
     overflow: hidden;
     background: -webkit-linear-gradient(to left, #6441A5, #2a0845); /* Chrome 10-25, Safari 5.1-6 */
@@ -273,6 +276,7 @@ body {
     color: #666;
     margin-bottom: 20px;
 }
+
 /* sales card */
 .salesCard {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -482,3 +486,4 @@ body {
 .social-buttons span i {
   padding-right:4px;
 }
+

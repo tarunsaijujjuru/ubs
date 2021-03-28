@@ -2,21 +2,19 @@ import shutil
 import sys
 import os
 import pymongo
-import json
 import urllib
 import gridfs
 import time
 import codecs
 from bson.decimal128 import Decimal128
-from flask import Flask,render_template, url_for, flash, redirect, request, session,make_response
+from flask import Flask,render_template, redirect, request, session
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
-from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators, SelectMultipleField,DecimalField
+from wtforms import StringField, SubmitField, PasswordField, validators, SelectMultipleField,DecimalField
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
 from wtforms.fields.html5 import EmailField
 from bson import ObjectId
 from wtforms.widgets import TextArea
-
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 app = Flask(__name__)
@@ -25,9 +23,9 @@ bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = 'blah blah blah blah'
 client = pymongo.MongoClient("mongodb+srv://ubs:" + urllib.parse.quote('ubs@12345') + "@cluster0.qxrt7.mongodb.net/ubs?retryWrites=true&w=majority")
 db = client.University_Bazar_db
-FS = db['fs']
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
+
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)  # set maximum file size, default is 16MB
@@ -52,6 +50,7 @@ class createPostForm(FlaskForm):
 	Users = StringField('Comma separated Emails',widget=TextArea())
 	submit = SubmitField('Create')
 
+
 class createAdForm(FlaskForm):
 	Title = StringField('Title', [validators.DataRequired()])
 	Description = StringField('Description', [validators.DataRequired()], widget=TextArea())
@@ -65,6 +64,7 @@ class createSalesForm(FlaskForm):
 	price = DecimalField('Enter the price for this item',places=2)
 	itemName = StringField('Enter the name of the item')
 	submit = SubmitField('Create')
+
 
 
 class searchbar(FlaskForm):
@@ -128,8 +128,6 @@ def createPost():
 			db.posts.insert_one(PostData).inserted_id
 			msg = "Create Post Succesful"
 
-			# image_data = fs.get(ObjectId('60446568ab7abf152435dd5d'))
-			# image_data = image_data.read()
 			return render_template('createpost.html', msg=msg,form = form, SearchForm=SearchForm,searchString=searchString)
 		else:
 			msg = "invalid inputs"
@@ -158,17 +156,14 @@ def ad():
 						'TimeStamp':time.time(),
 						'postedBy':session['EmailID'],
 						}
-
 			db.posts.insert_one(PostData).inserted_id
 			msg = "Create Post Succesful"
-
-			# image_data = fs.get(ObjectId('60446568ab7abf152435dd5d'))
-			# image_data = image_data.read()
 			return render_template('createAd.html', msg=msg,form = form, SearchForm=SearchForm,searchString=searchString)
 		else:
 			msg = "invalid inputs"
 
 	return render_template('createAd.html', form=form,msg=msg,SearchForm=SearchForm)
+
 @app.route('/',methods=['GET','POST'])
 def base():
 	return redirect('/login')

@@ -5,11 +5,28 @@
         <div class="header-name">
             <h1> UBS </h1>
         </div>
+<<<<<<< HEAD
         {{ wtf.quick_form(form, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
         extra_classes='header-search') }}
         <div class="header-right">
             <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
          </div>
+=======
+        <p>{{ session['FirstName'] }}</p>
+        {{ wtf.quick_form(form, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
+        extra_classes='header-search') }}
+        <div class="header-right">
+            <a href="/messages">
+                <h1 class="navbarButs optionTab activate" >Messages</h1>
+            </a>
+            <a href="/homepage">
+                <h1 class="navbarButs optionTab ">Home</h1>
+            </a>
+            <a href="/logout">
+                <h1 class="navbarButs optionTab">Logout></h1>
+            </a>
+        </div>
+>>>>>>> refs/remotes/origin/madhura_dev
     </div>
 {% endblock %}
 
@@ -19,6 +36,10 @@
     <h4 > {{searchString}} </h4>
 </div>
 {% endif %}
+<<<<<<< HEAD
+=======
+<div class="feed">
+>>>>>>> refs/remotes/origin/madhura_dev
     <div class="feed_container">
       <div class="container">
         <div class="card mb-3" style="max-width: 540px;">
