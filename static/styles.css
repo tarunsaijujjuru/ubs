@@ -81,6 +81,12 @@
     place-content: center;
     background-color: white;
 }
+.backgroundPic{
+    background-image: url('mystical.png');
+    background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+}
 
 .feed_container {
     display: flex;
@@ -98,6 +104,7 @@
 
 .customcontainer::-webkit-scrollbar {
     scrollbar-color:  dark ;
+
 }
 
 .customcontainer {
@@ -166,6 +173,7 @@ html {
     height: 100vh;
     overflow: hidden;
     background: -webkit-linear-gradient(to left, #6441A5, #2a0845); /* Chrome 10-25, Safari 5.1-6 */
+
 }
 
 body {
@@ -174,6 +182,25 @@ body {
     font-family: montserrat, arial, verdana;
     background: transparent;
     height: 100vh;
+}
+
+#delBtnForm {
+    text-align: center;
+    position: relative;
+    margin-top: 0px;
+    left: -45%
+}
+
+#delBtnForm .action-button {
+    width: 100px;
+    background: #ee0979;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
 }
 
 /*form styles*/
@@ -228,6 +255,28 @@ body {
 }
 
 /*buttons*/
+.createSales-button {
+    background: #ee0979;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 5px 5px;
+    margin: 10px 5px;
+    width: 100px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.sales-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  border: none;
+}
+
 #msform .action-button {
     width: 100px;
     background: #ee0979;
@@ -260,6 +309,29 @@ body {
     box-shadow: 0 0 0 2px white, 0 0 0 3px #C5C5F1;
 }
 
+#delbtn .action-button{
+    width: 100px;
+    background: #ee0979;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 5px;
+    margin: 10px 5px;
+}
+
+#delbtn .action-button:hover, #msform .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #ee0979;
+}
+
+/*image resize responsive*/
+.card-img-top {
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+}
+
 /*headings*/
 .fs-title {
     font-size: 18px;
@@ -276,6 +348,7 @@ body {
     color: #666;
     margin-bottom: 20px;
 }
+
 
 /* sales card */
 .salesCard {
@@ -320,6 +393,7 @@ body {
     font-size: 15px;
     text-align: center;
 }
+
 .sales-center {
   display: flex;
   justify-content: center;
@@ -336,16 +410,17 @@ body {
   font-family: arial;
 }
 /*card */
+
+/*new card css for home*/
 .f-card {
   background-color:white;
   /*height:400px;*/
-  width:502px;
+  width:702px;
   border: 1px solid #d0d1d5;
   border-radius:3px;
   margin: auto;
   margin-bottom:10px;
   padding: 12px;
-
   box-shadow: 0 0 5px rgba(0, 0, 0, .30); /* Not original, just a test */
 }
 
@@ -357,7 +432,6 @@ body {
   /*display:block;*/
   float:left;
   margin-right:8px;
-
   width:40px;
   height:40px;
 }
@@ -369,7 +443,6 @@ body {
   line-height: 1.38;
   color: #365899;
   text-decoration:none;
-
   margin-bottom:2px;
 }
 
@@ -388,6 +461,7 @@ body {
   text-decoration:none;
 }
 
+
 .time > a:hover {
   text-decoration:underline;
 }
@@ -403,41 +477,36 @@ body {
   color: black; /* Fallback */
   color: rgba(0, 0, 0, .30);
 }
-
 .content {
   clear:both;
   font-family: Helvetica, sans-serif;
   font-size:14px;
   line-height: 1.38;
 }
-
 .reference {
   width:476px;
 }
 .reference-thumb {
   display:block;
-  width:476px;
-  height:249px;
+  width:676px;
+  height:400px;
 }
-
 .reference-content {
   border: 2px solid black;
   border: 2px solid rgba(0, 0, 0, .1);
   border-top: 0;
   padding: 10px 12px 10px 12px;
+  width:676px;
 }
-
 .reference:hover .reference-content {
   border-color: black; /* Fallback */
   border-color: rgba(0, 0, 0, .15);
 }
-
 .reference-title {
   font-family: Georgia;
   font-size: 18px;
   font-weight: 500;
   line-height: 22px;
-
   margin-bottom:5px;
 }
 
@@ -446,14 +515,12 @@ body {
   font-size:12px;
   line-height: 16px;
 }
-
 .reference-font {
   color: #90949c;
   font-family: Helvetica;
   font-size: 11px;
   line-height: 11px;
   text-transform: uppercase;
-
   padding-top:9px;
 }
 
@@ -466,7 +533,6 @@ body {
   font-size: 12px;
   font-weight:bold;
   line-height:14px;
-
   border-top:1px solid #e5e5e5;
   padding-top:4px;
 
@@ -477,13 +543,10 @@ body {
   margin-right:20px;
   padding:4px 4px 4px 0;
 }
-
 .social-buttons span:hover {
   text-decoration:underline;
   cursor:pointer;
 }
-
 .social-buttons span i {
   padding-right:4px;
 }
-
