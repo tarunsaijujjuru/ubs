@@ -319,10 +319,14 @@ def homepage():
                            {"postToClubs": {"$in": user_clubs}}, {"Type": {"$in": typequery}}]},
                   {"Type": {"$in": typequery}}]})
     for doc in documents:
-        # print(doc)
+        print(doc)
         newEntry = {}
         newEntry["postType"] = doc['Type']
         newEntry["title"] = doc['Title']
+        email = doc['postedBy']
+        Firstname = db.userData_db.find_one({'EmailID':email})['FirstName']
+        print(Firstname)
+        newEntry['FirstName'] = Firstname
         image = fs.get(doc['Image'])
         base64_data = codecs.encode(image.read(), 'base64')
         image = base64_data.decode('utf-8')
