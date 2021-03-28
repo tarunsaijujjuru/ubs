@@ -35,13 +35,9 @@
 
 				<h2 class="fs-title">Create Post</h2>
                 <div class="row">
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-12">
                     {{ wtf.form_field(form.Title, class='form-control',
                         placeholder='Title') }}
-					</div>
-					<div class="form-group col-md-6">
-                    {{ wtf.form_field(form.Type,
-                        placeholder='Type') }}
 					</div>
 				</div>
 				<div class="row">
@@ -51,7 +47,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-12">
 						{{ wtf.form_field(form.Image,
 							placeholder='Image') }}
 					</div>
@@ -101,6 +97,7 @@ $(".next").click(function(){
 		alert("Description must be filled out");
 		return false;
     }
+
     x  = document.forms["msform"]["Image"].value;
 	if (x == "") {
 		alert("Image file must be choosen");

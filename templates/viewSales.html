@@ -1,0 +1,68 @@
+
+{% extends "base.html" %}
+
+{% block nav_bar %}
+    <div class="navbar">
+        <div class="header-name">
+            <h1> UBS </h1>
+        </div>
+        {{ wtf.quick_form(searchbarform, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
+        extra_classes='header-search') }}
+        <div class="header-right">
+            <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
+         </div>
+    </div>
+{% endblock %}
+
+{% block app_content %}
+
+
+{% if searchString %}
+<div class="alert alert-primary" role="alert">
+    <h4> {{searchString}} </h4>
+</div>
+{% endif %}
+
+<div class= "feed_container">
+
+    <div class="container customcontainer">
+        <div class="sales-center">
+            <a class="createSales-button" href="/createSales">Create Sale</a>
+        </div>
+    {% for card in cards %}
+        <div class="row">
+            {% for entry in card %}
+            <div class="col-md-4">
+                <div class="salesCard">
+                    <img class="card-img-top"src="data:;base64, {{entry['image']}}" alt="Card image cap"  style="width: 100%;height: 60vh;object-fit: cover" >
+                    <h1>{{entry['itemName']}}</h1>
+                    <p class="price">${{entry['price']}}</p>
+                    <p>{{entry['title']}}</p>
+                    <p>{{entry['body']}}</p>
+
+                </div>
+                <p><button class="salesCard-button">Add to Cart</button></p>
+            </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+
+    <div class="page-navigation">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+    </div>
+</div>
+</div>
+{% endblock %}

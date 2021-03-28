@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block nav_bar %}
+    <div class="navbar">
+        <div class="header-name">
+            <h1> UBS </h1>
+        </div>
+        {{ wtf.quick_form(SearchForm, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
+        extra_classes='header-search') }}
+        <div class="header-right">
+            <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
+         </div>
+    </div>
+{% endblock %}
+
+{% block app_content %}
+
+{% if searchString %}
+<div class="alert alert-primary" role="alert">
+    <h4> {{searchString}} </h4>
+</div>
+{% endif %}
+
+{% if msg %}
+			<div class="alert alert-primary" role="alert">
+						<h4 > {{msg}} </h4>
+			</div>
+			{% endif %}
+<!-- MultiStep Form -->
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+		<form action="/ad" method="post" id="msform" role="form" enctype="multipart/form-data">
+		{{form.csrf_token}}
+            <fieldset>
+				<h2 class="fs-title">Create Ad</h2>
+                <div class="row">
+					<div class="form-group col-md-12">
+                    {{ wtf.form_field(form.Title, class='form-control',
+                        placeholder='Title') }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-12">
+                    {{ wtf.form_field(form.Description, class='form-control',
+                        placeholder='Description') }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-12">
+						{{ wtf.form_field(form.Image,
+							placeholder='Image') }}
+					</div>
+				</div>
+
+				{{ wtf.form_field(form.submit, class='submit action-button') }}
+			</fieldset>
+		</form>
+	</div>
+</div>
+
+<script>
+
+$(".submit").click(function(){
+	var x = document.forms["msform"]["Title"].value;
+
+  	if (x == "") {
+		alert("Title must be filled out");
+		return false;
+    }
+    x  = document.forms["msform"]["Description"].value;
+	if (x == "") {
+		alert("Description must be filled out");
+		return false;
+    }
+    x  = document.forms["msform"]["Image"].value;
+	if (x == "") {
+		alert("Image file must be choosen");
+		return false;
+    }
+});
+
+
+</script>
+
+
+{% endblock %}

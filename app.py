@@ -6,17 +6,16 @@ import json
 import urllib
 import gridfs
 import time
-from flask import Flask,render_template, url_for, flash, redirect, request, session
+import codecs
+from bson.decimal128 import Decimal128
+from flask import Flask,render_template, url_for, flash, redirect, request, session,make_response
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
-
-from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators, SelectMultipleField
-import email_validator
+from wtforms import StringField, IntegerField, SubmitField, SelectField, PasswordField, validators, SelectMultipleField,DecimalField
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
-from wtforms.validators import InputRequired, Email, DataRequired
 from wtforms.fields.html5 import EmailField
-from wtforms.widgets import TextArea
 from bson import ObjectId
+from wtforms.widgets import TextArea
 
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 
@@ -26,10 +25,9 @@ bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = 'blah blah blah blah'
 client = pymongo.MongoClient("mongodb+srv://ubs:" + urllib.parse.quote('ubs@12345') + "@cluster0.qxrt7.mongodb.net/ubs?retryWrites=true&w=majority")
 db = client.University_Bazar_db
+FS = db['fs']
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
-
-
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)  # set maximum file size, default is 16MB
@@ -48,32 +46,31 @@ class LoginForm(FlaskForm):
 
 class createPostForm(FlaskForm):
 	Title = StringField('Title',[validators.DataRequired()])
-	Type = SelectField(
-		'Type',
-		choices=[('Exchange', 'Exchange'), ('Sales', 'Sales'), ('Ad', 'Ad')]
-	)
 	Description = StringField('Description',[validators.DataRequired()], widget=TextArea())
 	Image = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
 	Clubs = SelectMultipleField('Share To Clubs')
 	Users = StringField('Comma separated Emails',widget=TextArea())
 	submit = SubmitField('Create')
 
+class createAdForm(FlaskForm):
+	Title = StringField('Title', [validators.DataRequired()])
+	Description = StringField('Description', [validators.DataRequired()], widget=TextArea())
+	Image = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
+	submit = SubmitField('Create')
 
-
+class createSalesForm(FlaskForm):
+	Title = StringField('Title',[validators.DataRequired()])
+	Description = StringField('Description',[validators.DataRequired()], widget=TextArea())
+	Image = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
+	price = DecimalField('Enter the price for this item',places=2)
+	itemName = StringField('Enter the name of the item')
+	submit = SubmitField('Create')
 
 
 class searchbar(FlaskForm):
 	search = StringField('Search' ,[validators.DataRequired()], render_kw={"placeholder": "Search"})
 
-class createpost(FlaskForm):
-	title = StringField('Title',[validators.DataRequired()])
-	posttype = SelectField(
-		'posttype',
-		choices=[('Exchange', 'Exchange'), ('Sales', 'Sales'), ('Ad', 'Ad')]
-	)
-	description = StringField('description',[validators.DataRequired()], widget=TextArea())
-	shareTo = SelectField('Share To',[validators.DataRequired()])
-	submit = SubmitField('Create')
+
 	
 class clubsForm(FlaskForm):
 	clubName = StringField('Club Name', [validators.DataRequired()])
@@ -112,26 +109,22 @@ def createPost():
 			newTuple = (club,club)
 			postTo.append(newTuple)
 	form.Clubs.choices = postTo
-	print(form.Clubs.choices)
 	if request.method == 'POST':
 		if form.validate_on_submit():
 			searchString = SearchForm.search.data
 			fs = gridfs.GridFS(db)
 			file_id = fs.put(form.Image.data, filename=form.Image.data.filename)
 			sendToUsers =form.Users.data
-			paymentRequired = False
-			if form.Type.data == 'Sales':
-				paymentRequired = True
 			sendToUsersList =  sendToUsers.split(',')
 			PostData = {'Title': form.Title.data,
-						'Type': form.Type.data,
 						'Description': form.Description.data,
 						'Image': file_id,
+						'Type':'Post',
 						'TimeStamp':time.time() ,
 						'postedBy':session['EmailID'],
 						'postToClubs': form.Clubs.data,
-						'PaymentRequired':paymentRequired,
 						'postToUsers':sendToUsersList}
+
 			db.posts.insert_one(PostData).inserted_id
 			msg = "Create Post Succesful"
 
@@ -143,7 +136,39 @@ def createPost():
 
 	return render_template('createpost.html', form=form,msg=msg,SearchForm=SearchForm)
 
+@app.route('/ad',methods=['GET','POST'])
+def ad():
+	if(('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+	msg = ""
 
+	form = createAdForm()
+	SearchForm = searchbar()
+
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			searchString = SearchForm.search.data
+			fs = gridfs.GridFS(db)
+			file_id = fs.put(form.Image.data, filename=form.Image.data.filename)
+			PostData = {'Title': form.Title.data,
+						'Description': form.Description.data,
+						'Image': file_id,
+						'Type':'Ad',
+						'TimeStamp':time.time(),
+						'postedBy':session['EmailID'],
+						}
+
+			db.posts.insert_one(PostData).inserted_id
+			msg = "Create Post Succesful"
+
+			# image_data = fs.get(ObjectId('60446568ab7abf152435dd5d'))
+			# image_data = image_data.read()
+			return render_template('createAd.html', msg=msg,form = form, SearchForm=SearchForm,searchString=searchString)
+		else:
+			msg = "invalid inputs"
+
+	return render_template('createAd.html', form=form,msg=msg,SearchForm=SearchForm)
 @app.route('/',methods=['GET','POST'])
 def base():
 	return redirect('/login')
@@ -182,9 +207,101 @@ def clubs():
 		return redirect('/login')
 
 	clubs = db.clubs.find({})
+	clubsList = []
+	for club in clubs:
+		newEntry = {}
+		newEntry['name'] = club['name']
+		newEntry['description'] = club['description']
+		clubsList.append(newEntry)
 	user_clubs = db.userData_db.find_one({'EmailID': session['EmailID']})['Clubs']
+	print(len(clubsList))
+	return render_template('clubs.html', form=form, searchbarform=searchbarform, clubs=clubsList, user_clubs=user_clubs, clubsLength=len(clubsList))
+@app.route('/createSales', methods=['GET','POST'])
+def createSales():
+	if (('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+	msg = ""
 
-	return render_template('clubs.html', form=form, searchbarform=searchbarform, clubs=clubs, user_clubs=user_clubs)
+	form = createSalesForm()
+	SearchForm = searchbar()
+	userData = db.userData_db.find_one({'EmailID': session['EmailID']})
+
+	if request.method == 'POST':
+		if form.validate_on_submit():
+			searchString = SearchForm.search.data
+			fs = gridfs.GridFS(db)
+			file_id = fs.put(form.Image.data, filename=form.Image.data.filename)
+			itemName = form.itemName.data
+			price = form.price.data
+			salesData = {'Title': form.Title.data,
+						'Description': form.Description.data,
+						'Image': file_id,
+						'Type':'Sales',
+						'TimeStamp': time.time(),
+						'postedBy': session['EmailID'],
+						'itemName': itemName,
+						'price': Decimal128(price),
+						}
+			db.sales.insert_one(salesData).inserted_id
+			msg = "Create Sales Succesful"
+
+			# image_data = fs.get(ObjectId('60446568ab7abf152435dd5d'))
+			# image_data = image_data.read()
+			return render_template('createSales.html', msg=msg, form=form, SearchForm=SearchForm,
+								   searchString=searchString)
+		else:
+			msg = "invalid inputs"
+
+	return render_template('createSales.html', form=form, msg=msg, SearchForm=SearchForm)
+
+
+@app.route('/viewSales', methods=['GET','POST'])
+def viewSales():
+	if (('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+	searchbarform = searchbar()
+
+	if searchbarform.validate_on_submit():
+		searchString = searchbarform.search.data
+		print(searchString)
+		return render_template('viewSales.html',  searchbarform=searchbarform,
+							   searchString=searchString)
+
+	cards = []
+
+	total = db.sales.count_documents({})
+	print("Total Document", total)
+	fs = gridfs.GridFS(db)
+	documents = db.sales.find({})
+	counter = 1
+	card = []
+	itemsLeft = total % 3
+	for doc in documents:
+		newEntry = {}
+		newEntry["title"] = doc['Title']
+		image = fs.get(doc['Image'])
+		base64_data = codecs.encode(image.read(), 'base64')
+		image = base64_data.decode('utf-8')
+		newEntry["image"] = image
+		newEntry["body"] = doc['Description']
+		newEntry["ID"] = doc['_id']
+		newEntry["price"] = doc['price']
+		newEntry["itemName"] = doc['itemName']
+
+		card.append(newEntry)
+		if ((counter % 3 == 0 ) or (counter==total)  ):
+			cards.append(card)
+			card = []
+
+		counter += 1
+
+
+	
+
+	return render_template('viewSales.html', searchbarform=searchbarform,cards=cards)
+
 
 @app.route('/create_club', methods=['POST'])
 def create_club():
@@ -232,6 +349,7 @@ def join_club():
 
 		msg = "Joined the club successfully"
 		clubs = db.clubs.find({})
+
 		return render_template('clubs.html', form=form,searchbarform=searchbarform, clubs=clubs, user_clubs=user_clubs, msg=msg)
 	clubs = db.clubs.find({})
 	return render_template('clubs.html', form=form,searchbarform=searchbarform, clubs=clubs, msg="")
@@ -262,6 +380,9 @@ def leave_club():
 	clubs = db.clubs.find({})
 	return render_template('clubs.html', form=form,searchbarform=searchbarform, clubs=clubs, msg="")
 
+
+
+
 @app.route('/logout',methods=['GET'])
 def logout():
 	session.pop("EmailID", None)
@@ -273,7 +394,7 @@ def logout():
 @app.route('/homepage',methods=['GET','POST'])
 def homepage():
 	searchbarform = searchbar()
-	createpostform = createpost()
+	createpostform = createPostForm()
 	# Checking session
 	print(session)
 
