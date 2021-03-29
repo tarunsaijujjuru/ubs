@@ -13,7 +13,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request, ses
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
-from wtforms.fields.html5 import EmailField
+from wtforms.fields.html5 import EmailField, IntegerField
 from bson import ObjectId
 from wtforms.widgets import TextArea
 from flask_wtf.file import FileField, FileRequired, FileAllowed
@@ -82,6 +82,16 @@ class clubsForm(FlaskForm):
     clubName = StringField('Club Name', [validators.DataRequired()])
     description = StringField('Club Description', [validators.DataRequired()])
     submit = SubmitField('submit')
+
+class billing_info_form(FlaskForm):
+    streetAddress = StringField('Street Address', [validators.DataRequired()])
+    stateAbbr= StringField('State', [validators.DataRequired()])
+    zipCode=StringField('Zip Code', [validators.DataRequired()])
+
+class card_deets_form(FlaskForm):
+    number=StringField('Card Number', [validators.DataRequired()])
+    name=StringField('Name on Card', [validators.DataRequired()])
+    expiry=StringField('Expiry', [validators.DataRequired()])
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -447,6 +457,18 @@ def messages():
         print(searchString)
         return render_template('messages.html', form=form, searchString=searchString)
     return render_template('messages.html', form=form)
+
+@app.route('/payment/<buy_id>', methods=['GET'])
+def payment_portal(buy_id):
+    if ('EmailID' not in session):
+        print('Redirect')
+        return redirect('/login')
+    
+    form = billing_info_form()
+
+    ccform = card_deets_form()
+    
+    return render_template('payment_prompt.html', form=form, ccform=ccform)
 
 
 @app.errorhandler(404)
