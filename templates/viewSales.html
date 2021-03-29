@@ -39,7 +39,7 @@
                     <p class="price">${{entry['price']}}</p>
                     <p>{{entry['title']}}</p>
                     <p>{{entry['body']}}</p>
-                    <p><button class="salesCard-button">Add to Cart</button></p>
+                    <p><button class="salesCard-button" onclick="location.href='/viewPaymentForm?id={{ entry['ID'] }}'" type="button">Buy</button></p>
                 </div>
             </div>
             {% endfor %}
