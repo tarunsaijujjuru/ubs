@@ -1,0 +1,76 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block nav_bar %}
+    <div class="navbar">
+        <div class="header-name">
+            <h1> UBS </h1>
+        </div>
+        {{ wtf.quick_form(searchbarform, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
+        extra_classes='header-search') }}
+        <div class="header-right">
+            <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
+         </div>
+    </div>
+{% endblock %}
+
+{% block app_content %}
+
+
+{% if searchString %}
+<div class="alert alert-primary" role="alert">
+    <h4> {{searchString}} </h4>
+</div>
+{% endif %}
+
+<div class="feed_container py-5">
+    <div class="d-flex justify-content-center align-items-center">
+        {% if msg%}
+                <div class="alert alert-primary" role="alert">
+                    <h4 > {{msg}} </h4>
+                </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-lg-6 mx-auto">
+            <div class="card ">
+                <div class="card-header">
+                    <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
+                        <!-- Credit card form tabs -->
+                        <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
+                            <li class="nav-item"> <a data-toggle="pill" href="#credit-card" class="nav-link active"> <i class="fas fa-credit-card mr-2"></i> Credit Card </a> </li>
+                        </ul>
+                    </div> <!-- End -->
+                    <!-- Credit card form content -->
+                    <div class="tab-content">
+                        <!-- credit card info-->
+                        <div id="credit-card" class="tab-pane show active pt-3">
+                            <form action="/viewPaymentForm" method="post" role="form">
+                                {{form.csrf_token}}
+                                {{ wtf.form_field(form.amount, class='form-control') }}
+                                {{ wtf.form_field(form.cardHolderName, class='form-control', placeholder='Enter Name') }}
+                                {{ wtf.form_field(form.cardNumber, class='form-control', placeholder='Valid card number') }}
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                {{ wtf.form_field(form.expirationMonth, class='form-control', placeholder='MM') }}
+                                                {{ wtf.form_field(form.expirationYear, class='form-control', placeholder='YYYY') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        {{ wtf.form_field(form.cvv, class='form-control', placeholder='3 digit CVV') }}
+                                    </div>
+                                </div>
+                                <div class="card-footer"> 
+                                    {{ wtf.form_field(form.submit, class='subscribe btn btn-primary btn-block shadow-sm') }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

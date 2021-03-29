@@ -8,7 +8,7 @@ import gridfs
 import time
 import codecs
 from bson.decimal128 import Decimal128
-from wtforms import StringField, SubmitField, PasswordField, validators, SelectMultipleField,DecimalField
+from wtforms import StringField, SubmitField, PasswordField, validators, SelectMultipleField, DecimalField, IntegerField
 from flask import Flask, render_template, url_for, flash, redirect, request, session
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
@@ -17,6 +17,7 @@ from wtforms.fields.html5 import EmailField
 from bson import ObjectId
 from wtforms.widgets import TextArea
 from flask_wtf.file import FileField, FileRequired, FileAllowed
+from datetime import datetime
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -70,6 +71,14 @@ class createSalesForm(FlaskForm):
     itemName = StringField('Enter the name of the item')
     submit = SubmitField('Create')
 
+class createPaymentForm(FlaskForm):
+	amount = StringField('Amount', render_kw={'readonly': True})
+	cardHolderName = StringField('Card Holder Name',[validators.DataRequired()])
+	cardNumber = StringField('Card Number',[validators.DataRequired(), validators.Regexp('^\d{16}$', message = 'Card Number should be of 16 digits')])
+	expirationMonth = IntegerField('Expiration Month', [validators.NumberRange(min = 1, max = 12, message = 'Month should be between 01 and 12')])
+	expirationYear = IntegerField('Expiration Year', [validators.NumberRange(min = 2022, message = 'Year should be greater than 2021')])
+	cvv = IntegerField('CVV', [validators.NumberRange(min = 100, max = 999, message = 'CVV should be minimum of 3 digits')])
+	submit = SubmitField('Confirm Payment')
 
 
 class searchbar(FlaskForm):
@@ -249,6 +258,29 @@ def createSales():
             msg = "invalid inputs"
 
     return render_template('createSales.html', form=form, msg=msg, SearchForm=SearchForm)
+
+@app.route('/viewPaymentForm', methods=['GET', 'POST'])
+def viewPaymentForm():
+	if (('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+	searchbarform = searchbar()
+	form = createPaymentForm()
+	msg=''
+
+	if request.method == 'GET':
+		id = request.args.get('id')
+		amount = db.sales.find_one({'_id': ObjectId(id)})['price']
+		form.amount.data = '$' + str(amount)
+		session['itemId'] = str(ObjectId(id))
+	else:
+		if form.validate_on_submit():
+			db.payments.insert_one({'paidBy': session['EmailID'], 'amount': form.amount.data, 'itemId': session['itemId'], 'paidAt': datetime.now()})
+			session.pop('itemId', None)
+			msg = 'Payment Successful. Redirect to purchase history tab for more information'
+			return render_template('payment_form.html', form = form, msg=msg, searchbarform=searchbarform)
+
+	return render_template('payment_form.html', form = form, msg=msg, searchbarform=searchbarform)
 
 
 @app.route('/viewSales', methods=['GET','POST'])
