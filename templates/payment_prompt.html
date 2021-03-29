@@ -29,16 +29,33 @@
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-md-6 form-cont">
-			<div class="billing-address-form-container">
-				{{wtf.quick_form(form)}}
-			</div>
-
-
+			<br>
 			<div class="card-form-container">
 				<div class="card-wrapper">
 				</div>
 				<div class="card-details-container">
-					{{wtf.quick_form(ccform, extra_classes='card-details-form')}}
+					<form class='card-details-form'>
+						{{wtf.form_field(ccform.number)}}
+						
+							<div class="row">
+								<div class="col-6">
+									{{wtf.form_field(ccform.expiry)}}
+								</div>
+								<div class="col-6">
+									{{wtf.form_field(ccform.cvc)}}
+								</div>
+							</div>
+							{{wtf.form_field(ccform.streetAddress)}}
+							<div class="row">
+								<div class="col-6">
+									{{wtf.form_field(ccform.stateAbbr)}}
+								</div>
+								<div class="col-6">
+									{{wtf.form_field(ccform.zipCode)}}
+								</div>
+							</div>		
+					</form>
+					
 				</div>
 			</div>
 		</div>
@@ -50,7 +67,6 @@
 	$('.card-details-form').card({
 
 		container: '.card-wrapper', // *required*
-
 	});
 </script>
 

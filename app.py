@@ -92,6 +92,11 @@ class card_deets_form(FlaskForm):
     number=StringField('Card Number', [validators.DataRequired()])
     name=StringField('Name on Card', [validators.DataRequired()])
     expiry=StringField('Expiry', [validators.DataRequired()])
+    cvc=StringField('CVV', [validators.DataRequired()])
+    streetAddress = StringField('Street Address', [validators.DataRequired()])
+    stateAbbr= StringField('State', [validators.DataRequired()])
+    zipCode=StringField('Zip Code', [validators.DataRequired()])
+    submit=SubmitField('Make Payment')
 
 
 @app.route('/register', methods=['GET', 'POST'])
