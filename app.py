@@ -13,6 +13,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request, ses
 from flask_wtf import FlaskForm
 from flask_bootstrap import Bootstrap
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
+from wtforms.fields.core import SelectField
 from wtforms.fields.html5 import EmailField, IntegerField
 from bson import ObjectId
 from wtforms.widgets import TextArea
@@ -94,8 +95,9 @@ class card_deets_form(FlaskForm):
     expiry=StringField('Expiry', [validators.DataRequired()])
     cvc=StringField('CVV', [validators.DataRequired()])
     streetAddress = StringField('Street Address', [validators.DataRequired()])
-    stateAbbr= StringField('State', [validators.DataRequired()])
+    stateAbbr= SelectField('State', choices=["AK", "AL", "AR", "AS", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "GU", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MP", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN", "TX", "UM", "UT", "VA", "VI", "VT", "WA", "WI", "WV", "WY"])
     zipCode=StringField('Zip Code', [validators.DataRequired()])
+    billCity=StringField('City', [validators.DataRequired()])
     submit=SubmitField('Make Payment')
 
 
@@ -463,7 +465,7 @@ def messages():
         return render_template('messages.html', form=form, searchString=searchString)
     return render_template('messages.html', form=form)
 
-@app.route('/payment/<buy_id>', methods=['GET'])
+@app.route('/payment/<buy_id>', methods=['GET', 'POST'])
 def payment_portal(buy_id):
     if ('EmailID' not in session):
         print('Redirect')

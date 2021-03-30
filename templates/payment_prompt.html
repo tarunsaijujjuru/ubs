@@ -47,13 +47,20 @@
 							</div>
 							{{wtf.form_field(ccform.streetAddress)}}
 							<div class="row">
-								<div class="col-6">
+								<div class="col-2">
 									{{wtf.form_field(ccform.stateAbbr)}}
 								</div>
 								<div class="col-6">
+									{{wtf.form_field(ccform.billCity)}}
+								</div>
+								<div class="col-4">
 									{{wtf.form_field(ccform.zipCode)}}
 								</div>
-							</div>		
+							</div>
+							<div class="d-grid gap-2">
+								{{wtf.form_field(ccform.submit, class="btn btn-primary ccDetails-submit-btn")}}
+							</div>
+							
 					</form>
 					
 				</div>
