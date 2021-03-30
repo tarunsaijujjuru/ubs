@@ -179,7 +179,7 @@ html {
 body {
     height: 100vh;
     overflow: hidden;
-    font-family: montserrat, arial, verdana;
+    font-family: arial, verdana;
     background: transparent;
     height: 100vh;
 }
@@ -237,7 +237,7 @@ body {
     margin-bottom: 10px;
     width: 100%;
     box-sizing: border-box;
-    font-family: montserrat;
+    font-family: Arial, Helvetica, sans-serif;
     color: #2C3E50;
     font-size: 13px;
 }
