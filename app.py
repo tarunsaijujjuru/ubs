@@ -282,6 +282,26 @@ def viewPaymentForm():
 
 	return render_template('payment_form.html', form = form, msg=msg, searchbarform=searchbarform)
 
+@app.route('/purchaseHistory', methods=['GET'])
+def purchaseHistory():
+	if (('EmailID' not in session)):
+		print('Redirect')
+		return redirect('/login')
+	searchbarform = searchbar()
+
+	purchases = []
+	payments = db.payments.find({})
+
+	for payment in payments:
+		purchase = {}
+		item = db.sales.find_one({'_id': ObjectId(payment['itemId'])})
+		purchase['itemName'] = item['itemName']
+		purchase['itemCost'] = payment['amount']
+		purchase['date'] = payment['paidAt'].strftime("%Y-%m-%d")
+		purchases.append(purchase)
+
+	return render_template('purchaseHistory.html', purchases = purchases, searchbarform=searchbarform)
+
 
 @app.route('/viewSales', methods=['GET','POST'])
 def viewSales():
