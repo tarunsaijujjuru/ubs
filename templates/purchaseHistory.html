@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block nav_bar %}
+    <div class="navbar">
+        <div class="header-name">
+            <h1> UBS </h1>
+        </div>
+        {{ wtf.quick_form(searchbarform, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
+        extra_classes='header-search') }}
+        <div class="header-right">
+            <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
+         </div>
+    </div>
+{% endblock %}
+
+{% block app_content %}
+
+{% if searchString %}
+<div class="alert alert-primary" role="alert">
+    <h4> {{searchString}} </h4>
+</div>
+{% endif %}
+
+
+<div class= "feed_container">
+    <div class="container customcontainer">
+      <table class="table table-bordered">
+        <thead>
+            <tr>
+              <th scope="col">Item Name</th>
+              <th scope="col">Item Cost</th>
+              <th scope="col">Purchase Date</th>
+            </tr>
+        </thead>
+          <tbody>
+            {% for purchase in purchases %}
+                <tr>
+                    <td>{{purchase['itemName']}}</td>
+                    <td>{{purchase['itemCost']}}</td>
+                    <td>{{purchase['date']}}</td>
+                </tr>
+            {% endfor%}
+          </tbody>
+      </table>
+    </div>
+</div>
+
+{% endblock %}
