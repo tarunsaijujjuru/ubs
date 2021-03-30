@@ -1,18 +1,18 @@
-
 {% extends "base.html" %}
 
 {% block nav_bar %}
-    <div class="navbar">
-        <div class="header-name">
-            <h1> UBS </h1>
-        </div>
-        {{ wtf.quick_form(searchbarform, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
-        extra_classes='header-search') }}
-        <div class="header-right">
-            <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
-
-        </div>
+<div class="navbar">
+    <div class="header-name">
+        <h1> UBS </h1>
     </div>
+    {{ wtf.quick_form(searchbarform, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg',
+    20, 10),
+    extra_classes='header-search') }}
+    <div class="header-right">
+        <h1 class="navbarButs optionTab"> Welcome {{ session['FirstName'] }}</h1>
+
+    </div>
+</div>
 {% endblock %}
 
 {% block app_content %}
@@ -24,41 +24,42 @@
 </div>
 {% endif %}
 
-<div class= "feed_container backgroundPic">
-    {#    id="homepageBackgroundstyle" background-image: url('../static/blue.jpg'), background-size: auto 100%" >#}
-        <div class="container customcontainer">
-            <div class="sales-center">
-                <a class="createSales-button" href="/createPost">Create Post</a>
-            </div>
-            {% for card in cards %}
-            <div class="row">
-                <div class="f-card">
-                  <div class="header">
+<div class="feed_container backgroundPic">
+    {# id="homepageBackgroundstyle" background-image: url('../static/blue.jpg'), background-size: auto 100%" >#}
+    <div class="container customcontainer">
+        <div class="sales-center">
+            <a class="createSales-button" href="/createPost">Create Post</a>
+        </div>
+        {% for card in cards %}
+        <div class="row">
+            <div class="f-card">
+                <div class="header">
                     <div class="options"><i class="fa fa-chevron-down"></i></div>
                     <img class="co-logo" src="https:robohash.org/{{card['FirstName']}}.png?set=set5" />
                     <div class="co-name"><a href="#">{{card['FirstName']}}</a></div>
                     <div class="time"><a href="#">2hrs</a> · <i class="fa fa-globe"></i></div>
-                  </div>
-                  <div class="reference">
-                    <img class="reference-thumb" src="data:;base64, {{card['image']}}"  />
+                </div>
+                <div class="reference">
+                    <img class="reference-thumb" src="data:;base64, {{card['image']}}" />
                     <div class="reference-content">
-                      <div class="reference-title">{{card['title']}}</div>
-                      <div class="reference-subtitle">{{card['body']}}</div>
-                      <div class="reference-font">ubs</div>
+                        <div class="reference-title">{{card['title']}}</div>
+                        <div class="reference-subtitle">{{card['body']}}</div>
+                        <div class="reference-font">ubs</div>
                     </div>
-                  </div>
-                  <div class="social">
+                </div>
+                <div class="social">
                     <div class="social-content"></div>
                     <div class="social-buttons">
                         {% if card['deleteBtn'] %}
-                            <form action="/homepage" method="POST" ><button name="deletePost" class="createSales-button" type="submit" value="{{ card['ID'] }}" >Delete Post</button></form>
+                        <form action="/homepage" method="POST"><button name="deletePost" class="createSales-button"
+                                type="submit" value="{{ card['ID'] }}">Delete Post</button></form>
                         {% endif %}
                     </div>
-                  </div>
                 </div>
             </div>
-            {% endfor%}
         </div>
+        {% endfor%}
     </div>
+</div>
 
 {% endblock %}
