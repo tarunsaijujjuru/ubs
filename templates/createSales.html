@@ -7,7 +7,8 @@
         {{ wtf.quick_form(SearchForm, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
         extra_classes='header-search') }}
         <div class="header-right">
-            <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
+            <h1 style="background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg);" 
+			 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
          </div>
     </div>
 {% endblock %}
@@ -15,13 +16,15 @@
 {% block app_content %}
 
 {% if searchString %}
-<div class="alert alert-primary" role="alert">
+<div style="background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg);"
+ class="alert alert-primary" role="alert">
     <h4> {{searchString}} </h4>
 </div>
 {% endif %}
 
 {% if msg %}
-			<div class="alert alert-primary" role="alert">
+			<div style="background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg);"
+			 class="alert alert-primary" role="alert">
 						<h4 > {{msg}} </h4>
 			</div>
 			{% endif %}
