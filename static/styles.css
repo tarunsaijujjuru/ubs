@@ -90,12 +90,13 @@
 }
 
 .feed_container {
-  background-image: url("https://i.pinimg.com/originals/e2/71/fd/e271fda72f1e158b5f0569cc72d36d7f.jpg");
+
+  background-image: url("https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg");
 
     /* display: flex;
     flex-direction: column;
     padding: 10px;
-    background-color: rgb(170, 167, 167);
+    background-color: rgb(73, 70, 70);
     border-radius: 10px;
     overflow-y: scroll;
     height: 97vh; */
@@ -418,8 +419,8 @@ body {
 }
 
 .card-body{
-  background-image: url("https://image.freepik.com/free-vector/blue-violet-watercolor-abstract-texture-background_259910-8.jpg");
-  /*background-color: rgb(109, 203, 247); */
+  /* background-image: url("https://image.freepik.com/free-vector/blue-violet-watercolor-abstract-texture-background_259910-8.jpg"); */
+  background-color: whitesmoke
   font-family: arial;
   font-size: large;
 }
@@ -442,10 +443,10 @@ body {
   background-color: rebeccapurple;
 }
 .header {
-  background-image: url("https://cdn.wallpapersafari.com/89/46/oGOhiA.jpg");
+  /* background-image: url("https://cdn.wallpapersafari.com/89/46/oGOhiA.jpg"); */
 
   margin-bottom:17px;
-  /* background-color: rgb(171, 123, 250); */
+  background-color: whitesmoke
 }
 
 .co-logo {
@@ -504,8 +505,8 @@ body {
   height:400px;
 }
 .reference-content {
-  background-image: url("https://image.freepik.com/free-vector/blue-violet-watercolor-abstract-texture-background_259910-8.jpg");
-  /*background-color: indianred;*/
+  /* background-image: url("https://image.freepik.com/free-vector/blue-violet-watercolor-abstract-texture-background_259910-8.jpg"); */
+  background-color: whitesmoke
   border: 2px solid black;
   border: 2px solid rgba(0, 0, 0, .1);
   border-top: 0;
@@ -586,3 +587,5 @@ body {
   padding-top: 20px;
 }
 /* css for paymentshistory*/
+/* .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6{
+  color: white;} */

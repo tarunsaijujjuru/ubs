@@ -4,14 +4,14 @@
 
 {% block styles %}
 {{super()}}
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="{{url_for('static',filename='jquery.card.js') }}"></script>
 <link rel="stylesheet" href='https://use.fontawesome.com/releases/v5.8.1/css/all.css'>
-
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles.css') }}">
 {% endblock %}
 
 {% block title %}
@@ -19,12 +19,12 @@
 {% endblock %}
 
 {% block content %}
-  <div style="display: flex; flex-direction: column;">
+  <div style="display: flex; flex-direction: column; background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg)">
       {% block nav_bar %}
       {% endblock %}
 
-    <div style="flex:0.95">
-      <div style="display: flex; ">
+    <div style="flex:0.95; background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg);">
+      <div style="display: flex; background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg)">
         {% block side_bar %}
           <div class="sidenav" style="flex:.20;">
             <a href="/homepage">
@@ -50,7 +50,9 @@
             </a>
           </div>
         {% endblock %}
-        <div style="flex:.80">
+        <div 
+         style="flex:.80; background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg)"
+         >
           {% block app_content %}
           {% endblock %}
         </div>
