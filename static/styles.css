@@ -1,4 +1,5 @@
 .navbar {
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -54,8 +55,8 @@
 
 #box {
     width: 80%;
-    background-color: rgb(124, 124, 124);
-    color: white;
+    background-color: rgb(57, 20, 221);
+    color: rgb(236, 13, 13);
 }
 
 .optionTab {
@@ -89,21 +90,24 @@
 }
 
 .feed_container {
-    display: flex;
+  background-image: url("https://i.pinimg.com/originals/e2/71/fd/e271fda72f1e158b5f0569cc72d36d7f.jpg");
+
+    /* display: flex;
     flex-direction: column;
     padding: 10px;
-    background-color: white;
+    background-color: rgb(170, 167, 167);
     border-radius: 10px;
     overflow-y: scroll;
-    height: 97vh;
+    height: 97vh; */
 }
 
 .feed_container::-webkit-scrollbar {
     display:none;
 }
 
+
 .customcontainer::-webkit-scrollbar {
-    scrollbar-color:  dark ;
+    scrollbar-color: transparent ;
 
 }
 
@@ -111,6 +115,7 @@
     overflow-y: scroll;
     height: 92vh;
 }
+
 .feed-post-card {
     margin: 5px;
 }
@@ -127,6 +132,7 @@
 body {
     font-family: "Lato", sans-serif;
     height: 100vh;
+    
   }
   
 .sidenav {
@@ -211,7 +217,8 @@ body {
 }
 
 #msform fieldset {
-    background: white;
+    background-image: url("https://files.123freevectors.com/wp-content/original/114576-abstract-baby-blue-defocused-background.jpg"); 
+  /*background: rgb(241, 155, 155);*/
     border: 0 none;
     border-radius: 0px;
     box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
@@ -256,7 +263,7 @@ body {
 
 /*buttons*/
 .createSales-button {
-    background: #ee0979;
+    background: #e2c7d4;
     font-weight: bold;
     color: white;
     border: 0 none;
@@ -336,7 +343,8 @@ body {
 .fs-title {
     font-size: 18px;
     text-transform: uppercase;
-    color: #2C3E50;
+    background-color: transparent
+    color: black
     margin-bottom: 10px;
     letter-spacing: 2px;
     font-weight: bold;
@@ -345,10 +353,9 @@ body {
 .fs-subtitle {
     font-weight: normal;
     font-size: 13px;
-    color: #666;
+    color: rgb(138, 136, 136);
     margin-bottom: 20px;
 }
-
 
 /* sales card */
 .salesCard {
@@ -402,13 +409,21 @@ body {
   border: none;
 }
 .clubs-card{
- box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   width:100%;
   margin-bottom: 50px;
   margin-top:10px;
   text-align: center;
   font-family: arial;
 }
+
+.card-body{
+  background-image: url("https://image.freepik.com/free-vector/blue-violet-watercolor-abstract-texture-background_259910-8.jpg");
+  /*background-color: rgb(109, 203, 247); */
+  font-family: arial;
+  font-size: large;
+}
+
 /*card */
 
 /*new card css for home*/
@@ -423,9 +438,14 @@ body {
   padding: 12px;
   box-shadow: 0 0 5px rgba(0, 0, 0, .30); /* Not original, just a test */
 }
-
+.social-content{
+  background-color: rebeccapurple;
+}
 .header {
+  background-image: url("https://cdn.wallpapersafari.com/89/46/oGOhiA.jpg");
+
   margin-bottom:17px;
+  /* background-color: rgb(171, 123, 250); */
 }
 
 .co-logo {
@@ -466,35 +486,30 @@ body {
   text-decoration:underline;
 }
 
-.options {
-  font-family: Helvetica;
-  font-size:12px;
-  color: #e5e5e5;
-  float:right;
-}
-
-.options:hover {
-  color: black; /* Fallback */
-  color: rgba(0, 0, 0, .30);
-}
 .content {
   clear:both;
   font-family: Helvetica, sans-serif;
+  background-color: lightblue;
   font-size:14px;
   line-height: 1.38;
 }
 .reference {
+  background-color: transparent
   width:476px;
 }
 .reference-thumb {
+  background-color: aliceblue
   display:block;
   width:676px;
   height:400px;
 }
 .reference-content {
+  background-image: url("https://image.freepik.com/free-vector/blue-violet-watercolor-abstract-texture-background_259910-8.jpg");
+  /*background-color: indianred;*/
   border: 2px solid black;
   border: 2px solid rgba(0, 0, 0, .1);
   border-top: 0;
+  font-size: large;
   padding: 10px 12px 10px 12px;
   width:676px;
 }
@@ -503,6 +518,7 @@ body {
   border-color: rgba(0, 0, 0, .15);
 }
 .reference-title {
+  background-color: transparent;
   font-family: Georgia;
   font-size: 18px;
   font-weight: 500;
@@ -569,3 +585,4 @@ body {
 .padding-top-20 {
   padding-top: 20px;
 }
+/* css for paymentshistory*/

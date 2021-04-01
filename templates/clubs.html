@@ -1,6 +1,10 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
-
+<!doctype html
+ <html lang="en">
+     <head>
+         <link rel="stylesheet"href="css/custom-style.css">  
+     </head>
 {% block nav_bar %}
     <div class="navbar">
         <div class="header-name">
@@ -72,13 +76,13 @@
                     <fieldset>
                         <h2 class="fs-title">Create Club</h2>
                         <div class="row">
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-xl-12">
                             {{ wtf.form_field(form.clubName, class='form-control',
                                 placeholder='Club Name') }}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-xl-12">
                             {{ wtf.form_field(form.description, class='form-control',
                                 placeholder='Description') }}
                             </div>
@@ -88,7 +92,7 @@
                 </form>
 			</div>
 			</div>
-
+        
     <hr size='10'> </hr>
 
     <div class="d-flex justify-content-center align-items-center">
