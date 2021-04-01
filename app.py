@@ -501,6 +501,7 @@ def purchaseHistory():
         purchase["itemName"] = item["itemName"]
         purchase["itemCost"] = payment["amount"]
         purchase["date"] = payment["paidAt"].strftime("%Y-%m-%d")
+        purchase['Image'] = item['Image']
         purchases.append(purchase)
 
     return render_template(

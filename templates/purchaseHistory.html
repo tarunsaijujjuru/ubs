@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 
 {% block nav_bar %}
-    <div class="navbar">
-        <div class="header-name">
-            <h1> UBS </h1>
-        </div>
-        {{ wtf.quick_form(searchbarform, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
-        extra_classes='header-search') }}
-        <div class="header-right">
-            <h1 class="navbarButs optionTab" > Welcome {{ session['FirstName'] }}</h1>
-         </div>
+<div class="navbar">
+    <div class="header-name">
+        <h1> UBS </h1>
     </div>
+    {{ wtf.quick_form(searchbarform, form_type="inline", button_map={'submit':'secondary'}, horizontal_columns=('lg',
+    20, 10),
+    extra_classes='header-search') }}
+    <div class="header-right">
+        <h1 class="navbarButs optionTab"> Welcome {{ session['FirstName'] }}</h1>
+    </div>
+</div>
 {% endblock %}
 
 {% block app_content %}
@@ -20,28 +21,32 @@
     <h4> {{searchString}} </h4>
 </div>
 {% endif %}
-
-
-<div class= "feed_container">
+<div class="feed_container">
+    <h2>Your Purchases</h2>
     <div class="container customcontainer">
-      <table class="table table-bordered">
-        <thead>
-            <tr>
-              <th scope="col">Item Name</th>
-              <th scope="col">Item Cost</th>
-              <th scope="col">Purchase Date</th>
-            </tr>
-        </thead>
-          <tbody>
-            {% for purchase in purchases %}
-                <tr>
-                    <td>{{purchase['itemName']}}</td>
-                    <td>{{purchase['itemCost']}}</td>
-                    <td>{{purchase['date']}}</td>
-                </tr>
-            {% endfor%}
-          </tbody>
-      </table>
+        {% for purchase in purchases %}
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="card mb-3 col-8">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="../file/{{purchase['Image']}}" alt="..."
+                            style="max-height: 110px; object-fit:scale-down;">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{purchase['itemName']}}</h5>
+                            <p class="card-text">{{purchase['itemCost']}}</p>
+                            <p class="card-text">
+                                <small class="text-muted">{{purchase['date']}}</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2"></div>
+        </div>
+        {% endfor%}
     </div>
 </div>
 
