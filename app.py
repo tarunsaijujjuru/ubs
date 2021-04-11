@@ -235,6 +235,8 @@ class card_deets_form(FlaskForm):
     billCity = StringField("City", [validators.DataRequired()])
     submit = SubmitField("Make Payment")
 
+def send_messages(sender, receivers, message):
+    db.messages.insert_one({"from": sender, "to": receivers, "message": message, "sent_at": time.ctime(time.time())})
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -474,6 +476,21 @@ def viewPaymentForm():
                     "paidAt": datetime.now(),
                 }
             )
+
+            item = db.sales.find_one({"_id": ObjectId(session["itemId"])})
+
+            sender = "ubs@gmail.com"
+            item_owner = db.sales.find_one({"itemName": item["itemName"]})["postedBy"]
+            receivers = [item_owner]
+            buyer_name = db.userData_db.find_one({"EmailID": session["EmailID"]})["FirstName"]
+            message = "We received ${0} for the sale of {1} from {2}".format(item["price"], item["itemName"], buyer_name)
+            send_messages(sender, receivers, message)
+
+            receivers = [session["EmailID"]]
+            seller_name = db.userData_db.find_one({"EmailID": item_owner})["FirstName"]
+            message = "Payment of ${0} was successful against the purchase of {1} from {2}".format(item["price"], item["itemName"], seller_name)
+            send_messages(sender, receivers, message)
+
             session.pop("itemId", None)
             msg = "Payment Successful. Redirect to purchase history tab for more information"
             return render_template(
@@ -760,11 +777,20 @@ def messages():
         print("Redirect")
         return redirect("/login")
 
+    messages = db.messages.find({})
+    filtered_messages = []
+
+    for message in messages:
+        receivers = message["to"]
+        for to in receivers:
+            if(to == session["EmailID"]):
+                filtered_messages.append(message)
+
     if form.validate_on_submit():
         searchString = form.search.data
         print(searchString)
         return render_template("messages.html", form=form, searchString=searchString)
-    return render_template("messages.html", form=form)
+    return render_template("messages.html", form=form, messages=filtered_messages)
 
 
 @app.route("/payment/<buy_id>", methods=["GET", "POST"])
