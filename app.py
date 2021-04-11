@@ -492,7 +492,7 @@ def viewPaymentForm():
             send_messages(sender, receivers, message)
 
             session.pop("itemId", None)
-            msg = "Payment Successful. Redirect to purchase history tab for more information"
+            msg = "Payment Successful. Visit purchase history tab for more information"
             return render_template(
                 "payment_form.html", form=form, msg=msg, searchbarform=searchbarform
             )
@@ -712,7 +712,7 @@ def homepage():
     cards = []
     user_clubs = db.userData_db.find_one({"EmailID": session["EmailID"]})["Clubs"]
     total = db.posts.count_documents({"postToClubs": {"$in": user_clubs}})
-    print("Total Document", total)
+    # print("Total Document", total)
     typequery = ["Exchange", "Ad"]
     documents = db.posts.find(
         {
@@ -730,7 +730,7 @@ def homepage():
         }
     )
     for doc in documents:
-        print(doc)
+        # print(doc)
         newEntry = {}
         newEntry["postType"] = doc["Type"]
         newEntry["title"] = doc["Title"]

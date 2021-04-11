@@ -14,39 +14,42 @@
             </a>
         </div>
     </div>
-
 {% endblock %}
+
 {% block side_bar %}
 {% endblock %}
-{% block app_content %}
-{% if msg %}
-<div class="alert alert-primary" role="alert">
-            <h4 > {{msg}} </h4>
-</div>
-{% endif %}
-<div style="background-image: url(https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg);"
- class="container">
- <h2 style="color: azure;font-size: x-large;">Login</h2>
 
- <form action="/login" method="post" class="form" role="form">
-{{ form.csrf_token }}
-  <div class="row">
- <div style="color: azure; font-size:large;"
-  class="form-group col-md-6">
- {{ wtf.form_field(form.emailID, type='email', class='form-control', placeholder='Email Address') }}
- </div>
-   </div>
-  <div class="row">
- <div style="color: azure; font-size: large;" class="form-group col-md-6">
- {{ wtf.form_field(form.password, type='password', class='form-control', placeholder='Password') }}
- </div>
+{% block app_content %}
+
+{% if msg %}
+    <div class="alert alert-primary" role="alert">
+        <h4 > {{msg}} </h4>
+    </div>
+{% endif %}
+
+<div style="height: 100vh;width: auto;">
+  <div  class="container" style="margin: 20% 30%;
+  height: 100%;
+  width: 100%;">
+    <h2 style="color: azure;font-size: x-large;">Login</h2>
+    <form action="/login" method="post" class="form" role="form">
+      {{ form.csrf_token }}
+        <div class="row">
+      <div style="color: azure; font-size:large;"
+        class="form-group col-md-6 col-sm-4">
+      {{ wtf.form_field(form.emailID, type='email', class='form-control', placeholder='Email Address') }}
+      </div>
+        </div>
+        <div class="row">
+      <div style="color: azure; font-size: large;" class="form-group col-md-6 col-sm-4">
+      {{ wtf.form_field(form.password, type='password', class='form-control', placeholder='Password') }}
+      </div>
+        </div>
+      <div class="form-group">
+      {{ wtf.form_field(form.submit, class='createSales-button') }}
+      </div>
+    </form>
   </div>
-<div class="form-group">
- {{ wtf.form_field(form.submit, class='createSales-button') }}
- </div>
- </form>
- <hr>
 </div>
 
 {% endblock %}
-
