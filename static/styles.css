@@ -450,14 +450,14 @@ body {
   /* background-image: url("https://cdn.wallpapersafari.com/89/46/oGOhiA.jpg"); */
   flex: .2;
   margin-bottom: 2%;
-  background-color: whitesmoke;
+  background-color: whitesmoke; 
 }
 
 .co-logo {
   /*display:block;*/
   float:left;
   margin-right:8px;
-  width:40px;
+  width:auto !important;
   height:40px;
 }
 
@@ -508,7 +508,7 @@ body {
 }
 .reference-thumb {
   height: inherit;
-  width: inherit;
+  width: 100% !important;
   /*background-color: aliceblue;*/
   /*display:block;*/
   /*width:676px;*/
