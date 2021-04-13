@@ -813,7 +813,7 @@ def messages():
         print("Redirect")
         return redirect("/login")
 
-    messages = db.messages.find({})
+    messages = db.messages.find().sort("_id", -1)
     filtered_messages = []
 
     for message in messages:
