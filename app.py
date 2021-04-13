@@ -535,9 +535,38 @@ def viewSales():
 
     if searchbarform.validate_on_submit():
         searchString = searchbarform.search.data
-        print(searchString)
+        print("Search String is ",searchString)
+        cards = []
+        total = db.sales.count_documents({
+            "$or":[
+                {"itemName":{"$regex":".*"+searchString+".*"}},
+                {"Description":{"$regex":".*"+searchString+".*"}}
+                ]
+            })
+        print("Filtered Documents are ", total)
+        documents = db.sales.find({
+            "$or":[
+                {"itemName":{"$regex":".*"+searchString+".*"}},
+                {"Description":{"$regex":".*"+searchString+".*"}}
+                ]
+            })
+        counter = 1
+        card = []
+        for doc in documents:
+            newEntry = {}
+            newEntry["title"] = doc["Title"]
+            newEntry['imgId'] = doc['Image']
+            newEntry["body"] = doc["Description"]
+            newEntry["ID"] = doc["_id"]
+            newEntry["price"] = doc["price"]
+            newEntry["itemName"] = doc["itemName"]
+            card.append(newEntry)
+            if (counter % 3 == 0) or (counter == total):
+                cards.append(card)
+                card = []
+            counter += 1
         return render_template(
-            "viewSales.html", searchbarform=searchbarform, searchString=searchString
+            "viewSales.html", searchbarform=searchbarform, searchString=searchString, cards=cards
         )
     cards = []
     total = db.sales.count_documents({})
@@ -700,10 +729,10 @@ def logout():
 def homepage():
     if "EmailID" not in session:
         return redirect("/login")
-    if request.method == "POST":
-        if request.form["deletePost"]:
-            id = request.form["deletePost"]
-            db.posts.delete_one({"_id": ObjectId(id)})
+    # if request.method == "POST":
+    #     if request.form["deletePost"]:
+    #         id = request.form["deletePost"]
+    #         db.posts.delete_one({"_id": ObjectId(id)})
 
     searchbarform = searchbar()
     # Checking session
@@ -753,12 +782,19 @@ def homepage():
 
     if searchbarform.validate_on_submit():
         searchString = searchbarform.search.data
-        # print(searchString)
+        filteredCards=[]
+        print("Search String is ",searchString)
+        if searchString:
+            for card in cards:
+                print("Filtered Cards:")
+                if searchString in card["title"] or searchString in card["body"]:
+                    print(card)
+                    filteredCards.append(card)
         return render_template(
             "homepage.html",
             searchbarform=searchbarform,
             searchString=searchString,
-            cards=cards,
+            cards=filteredCards,
         )
 
     return render_template(
