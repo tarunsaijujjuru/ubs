@@ -27,16 +27,27 @@
     <div class="container">
         {% for purchase in purchases %}
         <div class="row">
-            <div class="col-2"></div>
             <div class="card mb-3 col-8">
                 <div class="row g-0">
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="
+                    height: 125px;
+                    width: 125px;
+                    margin: 0;
+                    padding: 0;
+                ">
                         <img src="../file/{{purchase['Image']}}" alt="..."
-                            style="max-height: 110px; object-fit:scale-down; width: auto !important;">
+                            style="object-fit: cover;
+                            height: 100% !important;
+                            width: 100% !important;">
                     </div>
                     <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">{{purchase['itemName']}}</h5>
+                        <div class="card-body" style="
+                        margin: 0;
+                        padding-left: 3rem;
+                        height: 100%;
+                        width: 100%;"
+                    >
+                            <h2 class="card-title">{{purchase['itemName']}}</h2>
                             <p class="card-text">{{purchase['itemCost']}}</p>
                             <p class="card-text">
                                 <small class="text-muted">{{purchase['date']}}</small>
@@ -45,7 +56,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-2"></div>
         </div>
         {% endfor%}
     </div>

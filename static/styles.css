@@ -8,6 +8,7 @@
     background-color: black;
     width: 100%;
     margin-bottom: 1px;
+    min-height: fit-content;
 
 }
 
@@ -91,7 +92,7 @@
 
 .feed_container {
 
-  background-image: url("https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg");
+  /* background-image: url("https://www.cnet.com/a/img/pecM5xCV-zw0mXTSlBwpAbYuPLw=/2018/06/07/78e06ce4-81e0-4b35-992f-6a2b3585b931/mojave-night.jpg"); */
 
     /* display: flex;
     flex-direction: column;
@@ -425,6 +426,22 @@ body {
   font-size: large;
 }
 
+.card {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: transparent;
+  /* background-clip: border-box; */
+  border: none;
+  /* border-radius: 1rem; */
+}
 /*card */
 
 /*new card css for home*/
