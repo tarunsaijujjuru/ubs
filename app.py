@@ -388,13 +388,22 @@ def login():
     return render_template("login.html", form=form, msg=msg)
 
 
-@app.route("/clubs", methods=["GET"])
+@app.route("/clubs", methods=["GET","POST"])
 def clubs():
     form = clubsForm()
     searchbarform = searchbar()
     if "EmailID" not in session:
         return redirect("/login")
-    clubs = db.clubs.find({})
+    if searchbarform.validate_on_submit():
+        searchString = searchbarform.search.data
+        print("Search String is ",searchString)
+        clubs = db.clubs.find({"$or":[
+                {"name":{"$regex":".*"+searchString+".*"}},
+                {"description":{"$regex":".*"+searchString+".*"}}
+                ]
+            })
+    else: 
+        clubs = db.clubs.find({})
     user_clubs = db.userData_db.find_one({"EmailID": session["EmailID"]})["Clubs"]
     return render_template(
         "clubs.html",
@@ -502,7 +511,7 @@ def viewPaymentForm():
     )
 
 
-@app.route("/purchaseHistory", methods=["GET"])
+@app.route("/purchaseHistory", methods=["GET","POST"])
 def purchaseHistory():
     if "EmailID" not in session:
         print("Redirect")
@@ -520,7 +529,19 @@ def purchaseHistory():
         purchase["date"] = payment["paidAt"].strftime("%Y-%m-%d")
         purchase['Image'] = item['Image']
         purchases.append(purchase)
-
+    if searchbarform.validate_on_submit():
+        searchString = searchbarform.search.data
+        filteredpurchases=[]
+        print("Search String is ",searchString)
+        if searchString:
+            for purchase in purchases:
+                print("Filtered purchases:")
+                if searchString in purchase["itemName"] or searchString in purchase["itemCost"] or searchString in purchase["date"]:
+                    print(purchase)
+                    filteredpurchases.append(purchase)
+        return render_template(
+            "purchaseHistory.html", purchases=filteredpurchases, searchbarform=searchbarform
+        )
     return render_template(
         "purchaseHistory.html", purchases=purchases, searchbarform=searchbarform
     )
