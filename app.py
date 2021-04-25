@@ -808,9 +808,11 @@ def homepage():
         if searchString:
             for card in cards:
                 print("Filtered Cards:")
-                if searchString in card["title"] or searchString in card["body"]:
-                    print(card)
-                    filteredCards.append(card)
+                for sstring in searchString.split(' '):
+                    if sstring in card["title"] or sstring in card["body"]:
+                        print(card)
+                        filteredCards.append(card)
+                
         return render_template(
             "homepage.html",
             searchbarform=searchbarform,

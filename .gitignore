@@ -132,3 +132,8 @@ dmypy.json
 bin/
 pyvenv.cfg
 
+pic_holder/
+fileInfo.json
+.vscode/
+
+.DS_Store
