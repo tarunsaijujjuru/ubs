@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block nav_bar %}
+<div class="navbar">
+  <div class="header-name">
+    <h1>UBS</h1>
+  </div>
+  {{ wtf.quick_form(form, form_type="inline", button_map={'submit':'secondary'},
+  horizontal_columns=('lg', 20, 10), extra_classes='header-search') }}
+  <div class="header-right">
+    <h1 class="navbarButs optionTab">Welcome {{ session['FirstName'] }}</h1>
+  </div>
+</div>
+{% endblock %}
+
+{% block app_content %}
+    {% if searchString %}
+        <div class="alert alert-primary" role="alert">
+          <h4>{{searchString}}</h4>
+        </div>
+    {% endif %}
+
+    <div class="feed_container customcontainer">
+      <div class="container" style="padding-top: 3%;text-align: -webkit-center;">
+        {% for message in messages %}
+          <div class="card mb-3" style="text-align: -webkit-auto;max-width: 60%;">
+            <div class="row g-0">
+              <div class="col-md-2">
+                <img src="https://robohash.org/{{session['EmailID']}}?size=75x75" alt="{{session['EmailID']}}" style="
+                 padding-left: 10%;" />
+              </div>
+              <div class="col-md-8">
+                <div class="card-body" ">
+                  <p class="card-text">
+                    {{message['message']}}
+                  </p>
+                  <p class="card-text">
+                    <small class="text-muted">{{message['sent_at']}}</small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor%}
+      </div>
+    </div>
+{% endblock %}
