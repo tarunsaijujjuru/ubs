@@ -7,6 +7,7 @@ import urllib
 from datetime import datetime
 from flask.wrappers import Response
 
+
 import gridfs
 from gridfs.errors import NoFile
 import pymongo
@@ -467,6 +468,8 @@ def login():
 
 @app.route("/clubs", methods=["GET","POST"])
 def clubs():
+    clubs=[]
+    user_clubs=[]
     form = clubsForm()
     searchbarform = searchbar()
     if "EmailID" not in session:
@@ -474,14 +477,15 @@ def clubs():
     if searchbarform.validate_on_submit():
         searchString = searchbarform.search.data
         print("Search String is ",searchString)
-        clubs = db.clubs.find({"$or":[
-                {"name":{"$regex":".*"+searchString+".*"}},
-                {"description":{"$regex":".*"+searchString+".*"}}
-                ]
-            })
+        for sstring in searchString.split(' '):
+            clubs = clubs + list(db.clubs.find({"$or":[
+                    {"name":{"$regex":".*"+sstring+".*", "$options":"i"}},
+                    {"description":{"$regex":".*"+sstring+".*", "$options":"i"}}
+                    ]
+                }))
     else: 
         clubs = db.clubs.find({})
-    user_clubs = db.userData_db.find_one({"EmailID": session["EmailID"]})["Clubs"]
+    user_clubs = user_clubs + (db.userData_db.find_one({"EmailID": session["EmailID"]})["Clubs"])
     return render_template(
         "clubs.html",
         form=form,
@@ -613,9 +617,10 @@ def purchaseHistory():
         if searchString:
             for purchase in purchases:
                 print("Filtered purchases:")
-                if searchString in purchase["itemName"] or searchString in purchase["itemCost"] or searchString in purchase["date"]:
-                    print(purchase)
-                    filteredpurchases.append(purchase)
+                for sstring in searchString.split(' '):
+                    if sstring in purchase["itemName"].lower() or sstring in purchase["itemCost"].lower() or sstring in purchase["date"].lower():
+                        print(purchase)
+                        filteredpurchases.append(purchase)
         return render_template(
             "purchaseHistory.html", purchases=filteredpurchases, searchbarform=searchbarform
         )
@@ -626,6 +631,8 @@ def purchaseHistory():
 
 @app.route("/viewSales", methods=["GET", "POST"])
 def viewSales():
+    total=0
+    documents=[]
     if "EmailID" not in session:
         print("Redirect")
         return redirect("/login")
@@ -635,19 +642,20 @@ def viewSales():
         searchString = searchbarform.search.data
         print("Search String is ",searchString)
         cards = []
-        total = db.sales.count_documents({
-            "$or":[
-                {"itemName":{"$regex":".*"+searchString+".*"}},
-                {"Description":{"$regex":".*"+searchString+".*"}}
-                ]
-            })
-        print("Filtered Documents are ", total)
-        documents = db.sales.find({
-            "$or":[
-                {"itemName":{"$regex":".*"+searchString+".*"}},
-                {"Description":{"$regex":".*"+searchString+".*"}}
-                ]
-            })
+        for sstring in searchString.split():
+            total = total + db.sales.count_documents({
+                "$or":[
+                    {"itemName":{"$regex":".*"+sstring+".*", "$options":"i"}},
+                    {"Description":{"$regex":".*"+sstring+".*", "$options":"i"}}
+                    ]
+                })
+            print("Filtered Documents are ", total)
+            documents = documents + list(db.sales.find({
+                "$or":[
+                    {"itemName":{"$regex":".*"+sstring+".*", "$options":"i"}},
+                    {"Description":{"$regex":".*"+sstring+".*", "$options":"i"}}
+                    ]
+                })) 
         counter = 1
         card = []
         for doc in documents:
@@ -885,9 +893,10 @@ def homepage():
         if searchString:
             for card in cards:
                 print("Filtered Cards:")
-                if searchString in card["title"] or searchString in card["body"]:
-                    print(card)
-                    filteredCards.append(card)
+                for sstring in searchString.split(' '):
+                    if sstring in card["title"].lower() or sstring in card["body"].lower():
+                        print(card)
+                        filteredCards.append(card)
         return render_template(
             "homepage.html",
             searchbarform=searchbarform,
