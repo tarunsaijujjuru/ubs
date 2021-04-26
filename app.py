@@ -87,6 +87,13 @@ class createPostForm(FlaskForm):
     Users = StringField("Comma separated Emails", widget=TextArea())
     submit = SubmitField("Create")
 
+class sendMessageForm(FlaskForm):
+    Message = StringField(
+        "Message", [validators.DataRequired()], widget=TextArea()
+    )
+    Users = StringField("Comma separated Emails", widget=TextArea())
+    submit = SubmitField("Send")
+
 
 class createAdForm(FlaskForm):
     Title = StringField("Title", [validators.DataRequired()])
@@ -236,7 +243,11 @@ class card_deets_form(FlaskForm):
     submit = SubmitField("Make Payment")
 
 def send_messages(sender, receivers, message):
-    db.messages.insert_one({"from": sender, "to": receivers, "message": message, "sent_at": time.ctime(time.time())})
+
+    print(db.messages.insert_one({"from": sender, "to": receivers, "message": message, "sent_at": time.ctime(time.time())}))
+
+def add_to_payment_messages(sender, receivers, message):
+    db.payment_messages.insert_one({"from": sender, "to": receivers, "message": message, "sent_at": time.ctime(time.time())})
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -313,6 +324,72 @@ def createPost():
             msg = "invalid inputs"
 
     return render_template("createpost.html", form=form, msg=msg, SearchForm=SearchForm)
+
+@app.route("/sendMessage", methods=["GET", "POST"])
+def sendMessage():
+    if "EmailID" not in session:
+        print("Redirect")
+        return redirect("/login")
+    msg = ""
+
+    form = sendMessageForm()
+    SearchForm = searchbar()
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            searchString = SearchForm.search.data
+            sendToUsers = form.Users.data
+            sendToUsersList = sendToUsers.split(",")
+            message = form.Message.data
+
+            send_messages(session['EmailID'], sendToUsersList, message)
+            msg = "Message sent successfully"
+
+            return render_template(
+                "send_message.html",
+                msg=msg,
+                form=form,
+                SearchForm=SearchForm,
+                searchString=searchString,
+            )
+        else:
+            msg = "invalid inputs"
+
+    return render_template("send_message.html", form=form, msg=msg, SearchForm=SearchForm)
+
+@app.route("/messages", methods=["GET"])
+def messages():
+    form = searchbar()
+
+    # Checking session
+    print(session)
+
+    if "EmailID" not in session:
+        print("Redirect")
+        return redirect("/login")
+
+    messages = db.messages.find().sort("_id", -1)
+    filtered_messages = []
+
+    for message in messages:
+        receivers = message["to"]
+
+
+        for to in receivers:
+            if(to == session["EmailID"]):
+                filtered_message = {}
+                filtered_message["message"] = message["message"]
+                filtered_message["sender"] = message["from"]
+                filtered_message["sent_at"] = message["sent_at"]
+                filtered_messages.append(filtered_message)
+
+    print(filtered_messages)
+
+    if form.validate_on_submit():
+        searchString = form.search.data
+        print(searchString)
+        return render_template("messages.html", form=form, searchString=searchString)
+    return render_template("messages.html", form=form, messages=filtered_messages)
 
 
 @app.route("/ad", methods=["GET", "POST"])
@@ -493,12 +570,12 @@ def viewPaymentForm():
             receivers = [item_owner]
             buyer_name = db.userData_db.find_one({"EmailID": session["EmailID"]})["FirstName"]
             message = "We received ${0} for the sale of {1} from {2}".format(item["price"], item["itemName"], buyer_name)
-            send_messages(sender, receivers, message)
+            add_to_payment_messages(sender, receivers, message)
 
             receivers = [session["EmailID"]]
             seller_name = db.userData_db.find_one({"EmailID": item_owner})["FirstName"]
             message = "Payment of ${0} was successful against the purchase of {1} from {2}".format(item["price"], item["itemName"], seller_name)
-            send_messages(sender, receivers, message)
+            add_to_payment_messages(sender, receivers, message)
 
             session.pop("itemId", None)
             msg = "Payment Successful. Visit purchase history tab for more information"
@@ -823,8 +900,8 @@ def homepage():
     )  # image=image
 
 
-@app.route("/messages", methods=["GET"])
-def messages():
+@app.route("/payment_messages", methods=["GET"])
+def payment_messages():
     form = searchbar()
 
     # Checking session
@@ -834,7 +911,7 @@ def messages():
         print("Redirect")
         return redirect("/login")
 
-    messages = db.messages.find().sort("_id", -1)
+    messages = db.payment_messages.find().sort("_id", -1)
     filtered_messages = []
 
     for message in messages:
@@ -846,9 +923,8 @@ def messages():
     if form.validate_on_submit():
         searchString = form.search.data
         print(searchString)
-        return render_template("messages.html", form=form, searchString=searchString)
-    return render_template("messages.html", form=form, messages=filtered_messages)
-
+        return render_template("payment_messages.html", form=form, searchString=searchString)
+    return render_template("payment_messages.html", form=form, messages=filtered_messages)
 
 @app.route("/payment/<buy_id>", methods=["GET", "POST"])
 def payment_portal(buy_id):

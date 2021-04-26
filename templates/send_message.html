@@ -1,0 +1,154 @@
+{% extends "base.html" %} {% block nav_bar %}
+<div class="navbar">
+  <div class="header-name">
+    <h1>UBS</h1>
+  </div>
+  {{ wtf.quick_form(SearchForm, form_type="inline",
+  button_map={'submit':'secondary'}, horizontal_columns=('lg', 20, 10),
+  extra_classes='header-search') }}
+  <div class="header-right">
+    <h1 class="navbarButs optionTab">Welcome {{ session['FirstName'] }}</h1>
+  </div>
+</div>
+{% endblock %} {% block app_content %} {% if searchString %}
+<div class="alert alert-primary" role="alert">
+  <h4>{{searchString}}</h4>
+</div>
+{% endif %} {% if msg %}
+<div class="alert alert-primary" role="alert">
+  <h4>{{msg}}</h4>
+</div>
+{% endif %}
+<!-- MultiStep Form -->
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <form
+      action="/sendMessage"
+      method="post"
+      id="msform"
+      role="form"
+      enctype="multipart/form-data"
+    >
+      {{form.csrf_token}}
+      <fieldset>
+        <h2 class="fs-title">Send To</h2>
+        <div class="row">
+          <div class="form-group col-md-12 invalid-email">
+            {{ wtf.form_field(form.Users,id="emails", class='form-control',
+            placeholder='Email IDs') }}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-12 invalid-email">
+            {{ wtf.form_field(form.Message,id="message", class='form-control',
+            placeholder='Message') }}
+          </div>
+        </div>
+
+        {{ wtf.form_field(form.submit, class='submit action-button') }}
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<script>
+  //jQuery time
+  var current_fs, next_fs; //fieldsets
+  var left, opacity, scale; //fieldset properties which we will animate
+  var animating; //flag to prevent quick multi-click glitches
+
+  $(".next").click(function () {
+    var x = document.forms["msform"]["Title"].value;
+
+    if (x == "") {
+      alert("Title must be filled out");
+      return false;
+    }
+    x = document.forms["msform"]["Description"].value;
+    if (x == "") {
+      alert("Description must be filled out");
+      return false;
+    }
+
+    x = document.forms["msform"]["Image"].value;
+    if (x == "") {
+      alert("Image file must be choosen");
+      return false;
+    }
+    if (animating) return false;
+    animating = true;
+
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
+
+    //show the next fieldset
+    next_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate(
+      { opacity: 0 },
+      {
+        step: function (now, mx) {
+          //as the opacity of current_fs reduces to 0 - stored in "now"
+          //1. scale current_fs down to 80%
+          scale = 1 - (1 - now) * 0.2;
+          //2. bring next_fs from the right(50%)
+          left = now * 50 + "%";
+          //3. increase opacity of next_fs to 1 as it moves in
+          opacity = 1 - now;
+          current_fs.css({
+            transform: "scale(" + scale + ")",
+            position: "absolute",
+          });
+          next_fs.css({ left: left, opacity: opacity });
+        },
+        duration: 800,
+        complete: function () {
+          current_fs.hide();
+          animating = false;
+        },
+      }
+    );
+  });
+
+  $(".submit").click(function () {
+    var emails = document.forms["msform"]["Users"].value;
+    if (emails == "") {
+      alert("user Emails has to be provided");
+      return false;
+    }
+
+    // Split string by comma into an array
+    emails = emails.split(",");
+
+    var valid = true;
+    var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    var invalidEmails = [];
+
+    for (var i = 0; i < emails.length; i++) {
+      // Trim whitespaces from email address
+      emails[i] = emails[i].trim();
+
+      // Check email against our regex to determine if email is valid
+      if (emails[i] == "" || !regex.test(emails[i])) {
+        invalidEmails.push(emails[i]);
+      }
+    }
+
+    // Output invalid emails
+    $(".invalid-email .text-danger").remove();
+    if (invalidEmails != 0) {
+      $(".invalid-email").append(
+        '<p class="text-danger">Invalid emails: ' +
+          invalidEmails.join(", ") +
+          "</p>"
+      );
+      alert("user emails in invalid form");
+      return false;
+    }
+    return true;
+  });
+</script>
+
+{% endblock %}
