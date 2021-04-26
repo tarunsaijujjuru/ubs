@@ -243,7 +243,8 @@ class card_deets_form(FlaskForm):
     submit = SubmitField("Make Payment")
 
 def send_messages(sender, receivers, message):
-    db.messages.insert_one({"from": sender, "to": receivers, "message": message, "sent_at": time.ctime(time.time())})
+
+    print(db.messages.insert_one({"from": sender, "to": receivers, "message": message, "sent_at": time.ctime(time.time())}))
 
 def add_to_payment_messages(sender, receivers, message):
     db.payment_messages.insert_one({"from": sender, "to": receivers, "message": message, "sent_at": time.ctime(time.time())})
@@ -372,9 +373,17 @@ def messages():
 
     for message in messages:
         receivers = message["to"]
+
+
         for to in receivers:
             if(to == session["EmailID"]):
-                filtered_messages.append(message)
+                filtered_message = {}
+                filtered_message["message"] = message["message"]
+                filtered_message["sender"] = message["from"]
+                filtered_message["sent_at"] = message["sent_at"]
+                filtered_messages.append(filtered_message)
+
+    print(filtered_messages)
 
     if form.validate_on_submit():
         searchString = form.search.data

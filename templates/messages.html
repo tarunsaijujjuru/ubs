@@ -20,8 +20,12 @@
         </div>
     {% endif %}
 
-    <div class="feed_container customcontainer">
+    <div class="feed_container customcontainer ">
+
       <div class="container" style="padding-top: 3%;text-align: -webkit-center;">
+        <div class="sales-center">
+            <a class="createSales-button" href="/sendMessage">Send Message</a>
+        </div>
         {% for message in messages %}
           <div class="card mb-3" style="text-align: -webkit-auto;max-width: 60%;">
             <div class="row g-0">
@@ -30,7 +34,10 @@
                  padding-left: 10%;" />
               </div>
               <div class="col-md-8">
-                <div class="card-body" ">
+                <div class="card-body" >
+                  <p class="card-text">
+                    <small class="text-muted">From: {{message['sender']}}</small>
+                  </p>
                   <p class="card-text">
                     {{message['message']}}
                   </p>
