@@ -894,9 +894,16 @@ def homepage():
             for card in cards:
                 print("Filtered Cards:")
                 for sstring in searchString.split(' '):
+<<<<<<< HEAD
                     if sstring in card["title"].lower() or sstring in card["body"].lower():
                         print(card)
                         filteredCards.append(card)
+=======
+                    if sstring in card["title"] or sstring in card["body"]:
+                        print(card)
+                        filteredCards.append(card)
+                
+>>>>>>> ea95de4ebf40afbf55ba1ed32fdd35d31b46e01d
         return render_template(
             "homepage.html",
             searchbarform=searchbarform,
